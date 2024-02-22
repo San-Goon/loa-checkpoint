@@ -1,14 +1,55 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  ChangeEvent,
+  FormEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { Button } from "@/components/ui/button";
 import { createWorker } from "tesseract.js";
+import { Input } from "@/components/ui/input";
+import {
+  QueryClient,
+  QueryClientProvider,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 
-export default function Home() {
+const queryClient = new QueryClient();
+async function getCharacterInfo(token: string, name: string) {
+  const response = await fetch(
+    `https://developer-lostark.game.onstove.com/armories/characters/${name}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `bearer ${token}`,
+      },
+    },
+  );
+
+  return await response.json();
+}
+
+function HomeBase() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const [stream, setStream] = useState<MediaStream | null>(null);
+
+  const [token, setToken] = useState<string>("");
+  const [name, setName] = useState<string>("");
+
+  const queryClient = useQueryClient();
+
+  const query = useQuery({
+    queryKey: ["info"],
+    queryFn: () => getCharacterInfo(token, name),
+    enabled: false,
+  });
 
   const captureVideo = useCallback(() => {
     const video = videoRef.current;
@@ -41,16 +82,23 @@ export default function Home() {
     }
   }, [stream]);
 
+  const onSubmit = useCallback(
+    async (e: FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      await query.refetch();
+    },
+    [query],
+  );
+
   useEffect(() => {
     if (stream && videoRef.current) {
       videoRef.current.srcObject = stream;
     }
   }, [stream]);
 
-  interface Lang {
-    code: string;
-    data: unknown;
-  }
+  useEffect(() => {
+    console.log("!!!!!!!!", query?.data);
+  }, [query]);
 
   const initializeTesseract = async (canvas: HTMLCanvasElement) => {
     // @ts-ignore
@@ -62,15 +110,47 @@ export default function Home() {
     await worker.terminate();
   };
 
+  const onChangeApi = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    setToken(e.target.value);
+  }, []);
+
+  const onChangeName = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    setName(e.target.value);
+  }, []);
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
+      <div>
+        <Input
+          value={token}
+          onChange={onChangeApi}
+          placeholder="API KEY 를 입력해주세요."
+        />
+      </div>
+      <div>
         <video ref={videoRef} autoPlay muted />
-        <canvas className="" ref={canvasRef} />
+        <canvas className="none" ref={canvasRef} />
         <Button onClick={startVideo}>화면공유</Button>
         <Button onClick={stopVideo}>공유중단</Button>
         <Button onClick={captureVideo}>캡처</Button>
       </div>
+      <div>
+        <form onSubmit={onSubmit}>
+          <Input
+            value={name}
+            onChange={onChangeName}
+            placeholder="캐릭터명 입력"
+          />
+        </form>
+      </div>
     </main>
+  );
+}
+
+export default function Home() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <HomeBase />
+    </QueryClientProvider>
   );
 }
