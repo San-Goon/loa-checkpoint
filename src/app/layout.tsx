@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
-import { ThemeProvider } from "@/components/theme-provider"
+import { ThemeProvider } from "@/components/theme-provider";
+import Header from "@/app/_component/Header";
+import Footer from "@/app/_component/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,14 +21,16 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className={inter.className}>
-      <ThemeProvider
+        <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
-      >
-        {children}
-      </ThemeProvider>
+        >
+          <Header />
+          {children}
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   );
