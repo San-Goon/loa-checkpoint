@@ -40,8 +40,14 @@ function HomeBase() {
 
   const [stream, setStream] = useState<MediaStream | null>(null);
 
-  const [token, setToken] = useState<string>("");
+  const [token, setToken] = useState<string>(
+    () => localStorage.getItem("token") || "",
+  );
   const [name, setName] = useState<string>("");
+
+  const [disableToken, setDisableToken] = useState<boolean>(
+    () => !!localStorage.getItem("token"),
+  );
 
   const queryClient = useQueryClient();
 
@@ -90,6 +96,15 @@ function HomeBase() {
     [query],
   );
 
+  const onClickSaveToken = useCallback(() => {
+    localStorage.setItem("token", token);
+    setDisableToken(true);
+  }, [token]);
+
+  const onClickEditToken = useCallback(() => {
+    setDisableToken(false);
+  }, []);
+
   useEffect(() => {
     if (stream && videoRef.current) {
       videoRef.current.srcObject = stream;
@@ -110,7 +125,7 @@ function HomeBase() {
     await worker.terminate();
   };
 
-  const onChangeApi = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+  const onChangeToken = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setToken(e.target.value);
   }, []);
 
@@ -123,9 +138,16 @@ function HomeBase() {
       <div>
         <Input
           value={token}
-          onChange={onChangeApi}
+          onChange={onChangeToken}
           placeholder="API KEY 를 입력해주세요."
+          disabled={disableToken}
         />
+        <Button onClick={onClickSaveToken} disabled={disableToken}>
+          저장
+        </Button>
+        <Button onClick={onClickEditToken} disabled={!disableToken}>
+          수정
+        </Button>
       </div>
       <div>
         <video ref={videoRef} autoPlay muted />
