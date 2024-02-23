@@ -17,6 +17,15 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 const queryClient = new QueryClient();
 async function getCharacterInfo(token: string, name: string) {
@@ -30,9 +39,141 @@ async function getCharacterInfo(token: string, name: string) {
       },
     },
   );
-
   return await response.json();
 }
+
+const TABLE_DATA = [
+  {
+    Name: "십상남자조강훈",
+    ItemAvgLevel: 1620.0,
+    ExpeditionLevel: 300,
+    MainEngraving: "축오",
+    EngravingBuff: "33333",
+    EngravingDebuff: "1",
+    Stats: "2000",
+    Weapon: "19",
+    Gem: "올10홍",
+    Tripods: "5",
+    Synergy: "치적",
+  },
+  {
+    Name: "십상남자조강훈2",
+    ItemAvgLevel: 1620.0,
+    ExpeditionLevel: 300,
+    MainEngraving: "절정",
+    EngravingBuff: "33333",
+    EngravingDebuff: "1",
+    Stats: "2000",
+    Weapon: "19",
+    Gem: "올10홍",
+    Tripods: "5",
+    Synergy: "치적",
+  },
+  {
+    Name: "십상남자조강훈2",
+    ItemAvgLevel: 1620.0,
+    ExpeditionLevel: 300,
+    MainEngraving: "절정",
+    EngravingBuff: "33333",
+    EngravingDebuff: "1",
+    Stats: "2000",
+    Weapon: "19",
+    Gem: "올10홍",
+    Tripods: "5",
+    Synergy: "치적",
+  },
+  {
+    Name: "십상남자조강훈2",
+    ItemAvgLevel: 1620.0,
+    ExpeditionLevel: 300,
+    MainEngraving: "절정",
+    EngravingBuff: "33333",
+    EngravingDebuff: "1",
+    Stats: "2000",
+    Weapon: "19",
+    Gem: "올10홍",
+    Tripods: "5",
+    Synergy: "치적",
+  },
+  {
+    Name: "십상남자조강훈2",
+    ItemAvgLevel: 1620.0,
+    ExpeditionLevel: 300,
+    MainEngraving: "절정",
+    EngravingBuff: "33333",
+    EngravingDebuff: "1",
+    Stats: "2000",
+    Weapon: "19",
+    Gem: "올10홍",
+    Tripods: "5",
+    Synergy: "치적",
+  },
+  {
+    Name: "십상남자조강훈2",
+    ItemAvgLevel: 1620.0,
+    ExpeditionLevel: 300,
+    MainEngraving: "절정",
+    EngravingBuff: "33333",
+    EngravingDebuff: "1",
+    Stats: "2000",
+    Weapon: "19",
+    Gem: "올10홍",
+    Tripods: "5",
+    Synergy: "치적",
+  },
+  {
+    Name: "십상남자조강훈2",
+    ItemAvgLevel: 1620.0,
+    ExpeditionLevel: 300,
+    MainEngraving: "절정",
+    EngravingBuff: "33333",
+    EngravingDebuff: "1",
+    Stats: "2000",
+    Weapon: "19",
+    Gem: "올10홍",
+    Tripods: "5",
+    Synergy: "치적",
+  },
+  {
+    Name: "십상남자조강훈2",
+    ItemAvgLevel: 1620.0,
+    ExpeditionLevel: 300,
+    MainEngraving: "절정",
+    EngravingBuff: "33333",
+    EngravingDebuff: "1",
+    Stats: "2000",
+    Weapon: "19",
+    Gem: "올10홍",
+    Tripods: "5",
+    Synergy: "치적",
+  },
+  {
+    Name: "십상남자조강훈2",
+    ItemAvgLevel: 1620.0,
+    ExpeditionLevel: 300,
+    MainEngraving: "절정",
+    EngravingBuff: "33333",
+    EngravingDebuff: "1",
+    Stats: "2000",
+    Weapon: "19",
+    Gem: "올10홍",
+    Tripods: "5",
+    Synergy: "치적",
+  },
+  {
+    Name: "십상남자조강훈2",
+    ItemAvgLevel: 1620.0,
+    ExpeditionLevel: 300,
+    MainEngraving: "절정",
+    EngravingBuff: "33333",
+    EngravingDebuff: "1",
+    Stats: "2000",
+    Weapon: "19",
+    Gem: "올10홍",
+    Tripods: "5",
+    Synergy: "치적",
+  },
+];
 
 function HomeBase() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -101,6 +242,13 @@ function HomeBase() {
     setDisableToken(true);
   }, [token]);
 
+  const onClickDelete = useCallback(
+    (index: number) => () => {
+      console.log("click delete!", index);
+    },
+    [],
+  );
+
   const onClickEditToken = useCallback(() => {
     setDisableToken(false);
   }, []);
@@ -134,38 +282,81 @@ function HomeBase() {
   }, []);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div>
+    <div className="p-6">
+      <div className="w-full flex justify-end pb-6">
         <Input
+          className="w-1/4"
           value={token}
           onChange={onChangeToken}
           placeholder="API KEY 를 입력해주세요."
           disabled={disableToken}
         />
-        <Button onClick={onClickSaveToken} disabled={disableToken}>
-          저장
-        </Button>
-        <Button onClick={onClickEditToken} disabled={!disableToken}>
-          수정
-        </Button>
+        {disableToken ? (
+          <Button onClick={onClickEditToken}>수정</Button>
+        ) : (
+          <Button onClick={onClickSaveToken}>저장</Button>
+        )}
       </div>
-      <div>
-        <video ref={videoRef} autoPlay muted />
-        <canvas className="none" ref={canvasRef} />
-        <Button onClick={startVideo}>화면공유</Button>
-        <Button onClick={stopVideo}>공유중단</Button>
-        <Button onClick={captureVideo}>캡처</Button>
+      <div className="flex w-full">
+        <div className="w-8/12">
+          <div className="w-60">
+            <form onSubmit={onSubmit}>
+              <Input
+                value={name}
+                onChange={onChangeName}
+                placeholder="캐릭터명 입력"
+              />
+            </form>
+          </div>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>캐릭명</TableHead>
+                <TableHead>템렙</TableHead>
+                <TableHead>원대렙</TableHead>
+                <TableHead>직각</TableHead>
+                <TableHead>각인</TableHead>
+                <TableHead>특성합</TableHead>
+                <TableHead>무기</TableHead>
+                <TableHead>보석</TableHead>
+                <TableHead>트포</TableHead>
+                <TableHead>시너지</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {TABLE_DATA.map((data, index) => {
+                return (
+                  <TableRow key={data.Name}>
+                    <TableCell>{data.Name}</TableCell>
+                    <TableCell>{data.ItemAvgLevel}</TableCell>
+                    <TableCell>{data.ExpeditionLevel}</TableCell>
+                    <TableCell>{data.MainEngraving}</TableCell>
+                    <TableCell>{data.EngravingBuff}</TableCell>
+                    <TableCell>{data.Stats}</TableCell>
+                    <TableCell>{data.Weapon}</TableCell>
+                    <TableCell>{data.Gem}</TableCell>
+                    <TableCell>{data.Tripods}</TableCell>
+                    <TableCell>{data.Synergy}</TableCell>
+                    <TableCell onClick={onClickDelete(index)}>x</TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </div>
+        <div className="w-4/12">
+          <div className="flex justify-center">
+            <video className="border-2" ref={videoRef} autoPlay muted />
+            <canvas className="hidden" ref={canvasRef} />
+          </div>
+          <div className="flex justify-center gap-1 pt-2">
+            <Button onClick={startVideo}>화면공유</Button>
+            <Button onClick={stopVideo}>공유중단</Button>
+            <Button onClick={captureVideo}>캡처</Button>
+          </div>
+        </div>
       </div>
-      <div>
-        <form onSubmit={onSubmit}>
-          <Input
-            value={name}
-            onChange={onChangeName}
-            placeholder="캐릭터명 입력"
-          />
-        </form>
-      </div>
-    </main>
+    </div>
   );
 }
 
