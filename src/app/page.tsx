@@ -5,7 +5,7 @@ import ActionSection from "@/app/_component/ActionSection";
 export default function Home() {
   return (
     <div className="p-6">
-      <div className="flex justify-between">
+      <div className="flex w-full justify-between pb-6">
         <ActionSection />
         <TokenSection />
       </div>

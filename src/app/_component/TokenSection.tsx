@@ -34,9 +34,8 @@ export default function TokenSection() {
   }, []);
 
   return (
-    <div className="w-full flex justify-end pb-6">
+    <div className="flex">
       <Input
-        className="w-1/4"
         value={token}
         onChange={onChangeToken}
         placeholder="API KEY 를 입력해주세요."
