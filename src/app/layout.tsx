@@ -30,7 +30,7 @@ export default function RootLayout({
         >
           <RQProvider>
             <Header />
-            {children}
+            <div className="h-screen">{children}</div>
             <Footer />
           </RQProvider>
         </ThemeProvider>
