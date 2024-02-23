@@ -6,7 +6,8 @@ interface TokenState {
 }
 
 export const useTokenStore = create<TokenState>((set) => ({
-  token: "",
+  token:
+    typeof window !== "undefined" ? localStorage.getItem("token") || "" : "",
   setToken(token) {
     set({ token });
   },

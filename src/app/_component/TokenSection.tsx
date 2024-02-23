@@ -6,31 +6,28 @@ import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { useTokenStore } from "@/store/token";
 
 export default function TokenSection() {
-  const setTokenZ = useTokenStore((state) => state.setToken);
-  const [token, setToken] = useState<string>(
-    () => localStorage.getItem("token") || "",
-  );
+  const { token, setToken } = useTokenStore();
 
-  const [disableToken, setDisableToken] = useState<boolean>(
-    () => !!localStorage.getItem("token"),
-  );
+  const [disableToken, setDisableToken] = useState<boolean>(false);
 
   const onClickSaveToken = useCallback(() => {
     localStorage.setItem("token", token);
-    setTokenZ(token);
     setDisableToken(true);
-  }, [setTokenZ, token]);
+  }, [token]);
 
   const onClickEditToken = useCallback(() => {
     setDisableToken(false);
   }, []);
 
-  const onChangeToken = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    setToken(e.target.value);
-  }, []);
+  const onChangeToken = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      setToken(e.target.value);
+    },
+    [setToken],
+  );
 
   useEffect(() => {
-    setTokenZ(token);
+    if (localStorage.getItem("token")) setDisableToken(true);
   }, []);
 
   return (
