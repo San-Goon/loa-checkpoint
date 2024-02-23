@@ -3,8 +3,10 @@
 import { Button } from "@/components/ui/button";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createWorker } from "tesseract.js";
+import { useActionsStore } from "@/store/actions";
 
 export default function VideoSection() {
+  const OCR = useActionsStore((state) => state.OCR);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -56,6 +58,8 @@ export default function VideoSection() {
       videoRef.current.srcObject = stream;
     }
   }, [stream]);
+
+  if (!OCR) return null;
 
   return (
     <div className="w-4/12">
