@@ -20,12 +20,12 @@ import {
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { ResponseProcessor } from "@/lib/utils";
 
 const queryClient = new QueryClient();
 async function getCharacterInfo(token: string, name: string) {
@@ -42,139 +42,6 @@ async function getCharacterInfo(token: string, name: string) {
   return await response.json();
 }
 
-const TABLE_DATA = [
-  {
-    Name: "십상남자조강훈",
-    ItemAvgLevel: 1620.0,
-    ExpeditionLevel: 300,
-    MainEngraving: "축오",
-    EngravingBuff: "33333",
-    EngravingDebuff: "1",
-    Stats: "2000",
-    Weapon: "19",
-    Gem: "올10홍",
-    Tripods: "5",
-    Synergy: "치적",
-  },
-  {
-    Name: "십상남자조강훈2",
-    ItemAvgLevel: 1620.0,
-    ExpeditionLevel: 300,
-    MainEngraving: "절정",
-    EngravingBuff: "33333",
-    EngravingDebuff: "1",
-    Stats: "2000",
-    Weapon: "19",
-    Gem: "올10홍",
-    Tripods: "5",
-    Synergy: "치적",
-  },
-  {
-    Name: "십상남자조강훈2",
-    ItemAvgLevel: 1620.0,
-    ExpeditionLevel: 300,
-    MainEngraving: "절정",
-    EngravingBuff: "33333",
-    EngravingDebuff: "1",
-    Stats: "2000",
-    Weapon: "19",
-    Gem: "올10홍",
-    Tripods: "5",
-    Synergy: "치적",
-  },
-  {
-    Name: "십상남자조강훈2",
-    ItemAvgLevel: 1620.0,
-    ExpeditionLevel: 300,
-    MainEngraving: "절정",
-    EngravingBuff: "33333",
-    EngravingDebuff: "1",
-    Stats: "2000",
-    Weapon: "19",
-    Gem: "올10홍",
-    Tripods: "5",
-    Synergy: "치적",
-  },
-  {
-    Name: "십상남자조강훈2",
-    ItemAvgLevel: 1620.0,
-    ExpeditionLevel: 300,
-    MainEngraving: "절정",
-    EngravingBuff: "33333",
-    EngravingDebuff: "1",
-    Stats: "2000",
-    Weapon: "19",
-    Gem: "올10홍",
-    Tripods: "5",
-    Synergy: "치적",
-  },
-  {
-    Name: "십상남자조강훈2",
-    ItemAvgLevel: 1620.0,
-    ExpeditionLevel: 300,
-    MainEngraving: "절정",
-    EngravingBuff: "33333",
-    EngravingDebuff: "1",
-    Stats: "2000",
-    Weapon: "19",
-    Gem: "올10홍",
-    Tripods: "5",
-    Synergy: "치적",
-  },
-  {
-    Name: "십상남자조강훈2",
-    ItemAvgLevel: 1620.0,
-    ExpeditionLevel: 300,
-    MainEngraving: "절정",
-    EngravingBuff: "33333",
-    EngravingDebuff: "1",
-    Stats: "2000",
-    Weapon: "19",
-    Gem: "올10홍",
-    Tripods: "5",
-    Synergy: "치적",
-  },
-  {
-    Name: "십상남자조강훈2",
-    ItemAvgLevel: 1620.0,
-    ExpeditionLevel: 300,
-    MainEngraving: "절정",
-    EngravingBuff: "33333",
-    EngravingDebuff: "1",
-    Stats: "2000",
-    Weapon: "19",
-    Gem: "올10홍",
-    Tripods: "5",
-    Synergy: "치적",
-  },
-  {
-    Name: "십상남자조강훈2",
-    ItemAvgLevel: 1620.0,
-    ExpeditionLevel: 300,
-    MainEngraving: "절정",
-    EngravingBuff: "33333",
-    EngravingDebuff: "1",
-    Stats: "2000",
-    Weapon: "19",
-    Gem: "올10홍",
-    Tripods: "5",
-    Synergy: "치적",
-  },
-  {
-    Name: "십상남자조강훈2",
-    ItemAvgLevel: 1620.0,
-    ExpeditionLevel: 300,
-    MainEngraving: "절정",
-    EngravingBuff: "33333",
-    EngravingDebuff: "1",
-    Stats: "2000",
-    Weapon: "19",
-    Gem: "올10홍",
-    Tripods: "5",
-    Synergy: "치적",
-  },
-];
-
 function HomeBase() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -189,6 +56,8 @@ function HomeBase() {
   const [disableToken, setDisableToken] = useState<boolean>(
     () => !!localStorage.getItem("token"),
   );
+
+  const [tableData, setTableData] = useState<any>([]);
 
   const queryClient = useQueryClient();
 
@@ -232,9 +101,14 @@ function HomeBase() {
   const onSubmit = useCallback(
     async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      await query.refetch();
+      for (const data of tableData) {
+        if (data.name === name) return;
+      }
+      const { data } = await query.refetch();
+      if (data === null || data.ArmoryProfile.ItemAvgLevel < 1445) return;
+      setTableData([...tableData, ResponseProcessor(data)]);
     },
-    [query],
+    [query, tableData, name],
   );
 
   const onClickSaveToken = useCallback(() => {
@@ -244,9 +118,11 @@ function HomeBase() {
 
   const onClickDelete = useCallback(
     (index: number) => () => {
-      console.log("click delete!", index);
+      const tempData = [...tableData];
+      tempData.splice(index, 1);
+      setTableData(tempData);
     },
-    [],
+    [tableData],
   );
 
   const onClickEditToken = useCallback(() => {
@@ -258,10 +134,6 @@ function HomeBase() {
       videoRef.current.srcObject = stream;
     }
   }, [stream]);
-
-  useEffect(() => {
-    console.log("!!!!!!!!", query?.data);
-  }, [query]);
 
   const initializeTesseract = async (canvas: HTMLCanvasElement) => {
     // @ts-ignore
@@ -280,6 +152,8 @@ function HomeBase() {
   const onChangeName = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
   }, []);
+
+  console.log("tableData: ", tableData);
 
   return (
     <div className="p-6">
@@ -324,19 +198,19 @@ function HomeBase() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {TABLE_DATA.map((data, index) => {
+              {tableData.map((data: any, index: number) => {
                 return (
-                  <TableRow key={data.Name}>
-                    <TableCell>{data.Name}</TableCell>
-                    <TableCell>{data.ItemAvgLevel}</TableCell>
-                    <TableCell>{data.ExpeditionLevel}</TableCell>
-                    <TableCell>{data.MainEngraving}</TableCell>
-                    <TableCell>{data.EngravingBuff}</TableCell>
-                    <TableCell>{data.Stats}</TableCell>
-                    <TableCell>{data.Weapon}</TableCell>
-                    <TableCell>{data.Gem}</TableCell>
-                    <TableCell>{data.Tripods}</TableCell>
-                    <TableCell>{data.Synergy}</TableCell>
+                  <TableRow key={data.name}>
+                    <TableCell>{data.name}</TableCell>
+                    <TableCell>{data.itemLv}</TableCell>
+                    <TableCell>{data.expLv}</TableCell>
+                    <TableCell>{data.mainEng}</TableCell>
+                    <TableCell>{data.eng}</TableCell>
+                    <TableCell>{data.totalStats}</TableCell>
+                    <TableCell>{data.weapon}</TableCell>
+                    <TableCell>{`홍염:${data.gem.hong} 멸화:${data.gem.myul}`}</TableCell>
+                    <TableCell>{data.tripod["5"]}</TableCell>
+                    <TableCell>{data.synergy}</TableCell>
                     <TableCell onClick={onClickDelete(index)}>x</TableCell>
                   </TableRow>
                 );
