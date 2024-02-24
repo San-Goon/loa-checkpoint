@@ -8,6 +8,7 @@ interface ActionsState {
 export const useActionsStore = create<ActionsState>((set) => ({
   OCR: false,
   setOCR(state) {
+    localStorage.setItem("OCR", state.toString());
     set({ OCR: state });
   },
 }));

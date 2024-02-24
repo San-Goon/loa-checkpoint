@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import Header from "@/app/_component/Header";
 import Footer from "@/app/_component/Footer";
 import RQProvider from "@/app/_component/RQProvider";
+import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -32,6 +33,7 @@ export default function RootLayout({
             <Header />
             <div className="h-screen">{children}</div>
             <Footer />
+            <Toaster />
           </RQProvider>
         </ThemeProvider>
       </body>
