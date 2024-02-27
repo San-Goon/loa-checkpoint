@@ -17,7 +17,11 @@ export default function VideoSection() {
 
   const [recognized, setRecognized] = useState<string[]>([]);
 
+  const [isSharing, setIsSharing] = useState<boolean>(false);
+  const [isCapturing, setIsCapturing] = useState<boolean>(false);
+
   const startCapture = useCallback(() => {
+    setIsCapturing(true);
     const video = videoRef.current;
     const canvas = canvasRef.current;
 
@@ -55,6 +59,7 @@ export default function VideoSection() {
   }, [videoRef, canvasRef]);
 
   const stopCapture = useCallback(() => {
+    setIsCapturing(false);
     if (captureIntervalId.current) {
       window.clearInterval(captureIntervalId.current);
       captureIntervalId.current = null;
@@ -62,6 +67,7 @@ export default function VideoSection() {
   }, [captureIntervalId]);
 
   const startVideo = useCallback(async () => {
+    setIsSharing(true);
     const mediaStream = await navigator.mediaDevices.getDisplayMedia({
       video: true,
     });
@@ -75,6 +81,8 @@ export default function VideoSection() {
       setStream(null);
     }
     stopCapture();
+    setIsSharing(false);
+    setIsCapturing(false);
   }, [stream, stopCapture]);
 
   useEffect(() => {
@@ -94,11 +102,20 @@ export default function VideoSection() {
         <canvas className="hidden" ref={canvasRef} />
       </div>
       <div className="flex justify-center gap-1 pt-2">
-        <Button onClick={startVideo}>화면공유</Button>
-        <Button onClick={stopVideo}>공유중단</Button>
-        <Button onClick={startCapture}>캡처시작</Button>
-        <Button onClick={stopCapture}>캡처중단</Button>
-        <AdjustDialog />
+        {isSharing ? (
+          <Button onClick={stopVideo}>공유중단</Button>
+        ) : (
+          <Button onClick={startVideo}>화면공유</Button>
+        )}
+        {isCapturing ? (
+          <Button onClick={stopCapture}>캡처중단</Button>
+        ) : (
+          <Button onClick={startCapture} disabled={!isSharing}>
+            캡처시작
+          </Button>
+        )}
+
+        <AdjustDialog canvasRef={canvasRef} />
       </div>
     </div>
   );
