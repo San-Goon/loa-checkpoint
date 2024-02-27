@@ -5,20 +5,43 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { createWorker } from "tesseract.js";
 import { useActionsStore } from "@/store/actions";
 import AdjustDialog from "@/app/_component/AdjustDialog";
+import { imageAdjustStore } from "@/store/imageAdjust";
 
 export default function VideoSection() {
   const OCR = useActionsStore((state) => state.OCR);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const captureIntervalId = useRef<number | null>(null);
+  const location = imageAdjustStore();
 
   const [stream, setStream] = useState<MediaStream | null>(null);
-  const [image, setImage] = useState("");
+  const [capturedImage, setCapturedImage] = useState("");
 
   const [recognized, setRecognized] = useState<string[]>([]);
 
   const [isSharing, setIsSharing] = useState<boolean>(false);
   const [isCapturing, setIsCapturing] = useState<boolean>(false);
+
+  const onClickOpenAdjust = useCallback(() => {
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
+
+    if (!video || !canvas) return;
+
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+    canvas.toBlob((blob) => {
+      if (blob) {
+        const imageUrl = URL.createObjectURL(blob);
+        setCapturedImage(imageUrl);
+      }
+    });
+  }, [videoRef, canvasRef]);
 
   const startCapture = useCallback(() => {
     setIsCapturing(true);
@@ -40,8 +63,8 @@ export default function VideoSection() {
       // @ts-ignore
       const worker = await createWorker(["kor", "eng"]);
       const rectangle = {
-        left: 1275,
-        top: 388,
+        left: location.left,
+        top: location.top,
         width: 180,
         height: 285,
       };
@@ -56,7 +79,7 @@ export default function VideoSection() {
       console.log("value: ", value);
       await worker.terminate();
     }, 5000);
-  }, [videoRef, canvasRef]);
+  }, [location, videoRef, canvasRef]);
 
   const stopCapture = useCallback(() => {
     setIsCapturing(false);
@@ -67,11 +90,17 @@ export default function VideoSection() {
   }, [captureIntervalId]);
 
   const startVideo = useCallback(async () => {
-    setIsSharing(true);
     const mediaStream = await navigator.mediaDevices.getDisplayMedia({
       video: true,
     });
+    mediaStream.getTracks().forEach((track) => {
+      track.onended = () => {
+        setIsSharing(false);
+        setIsCapturing(false);
+      };
+    });
     setStream(mediaStream);
+    setIsSharing(true);
   }, []);
 
   const stopVideo = useCallback(() => {
@@ -90,8 +119,6 @@ export default function VideoSection() {
       videoRef.current.srcObject = stream;
     }
   }, [stream]);
-
-  console.log("recognized: ", recognized);
 
   if (!OCR) return null;
 
@@ -115,7 +142,11 @@ export default function VideoSection() {
           </Button>
         )}
 
-        <AdjustDialog canvasRef={canvasRef} />
+        <AdjustDialog
+          onClickOpen={onClickOpenAdjust}
+          capturedImage={capturedImage}
+          disabled={!isSharing}
+        />
       </div>
     </div>
   );
