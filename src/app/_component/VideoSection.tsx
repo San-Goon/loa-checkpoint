@@ -5,14 +5,14 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { createWorker } from "tesseract.js";
 import { useActionsStore } from "@/store/actions";
 import AdjustDialog from "@/app/_component/AdjustDialog";
-import { imageAdjustStore } from "@/store/imageAdjust";
+import { sectionAdjustStore } from "@/store/sectionAdjust";
 
 export default function VideoSection() {
   const OCR = useActionsStore((state) => state.OCR);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const captureIntervalId = useRef<number | null>(null);
-  const location = imageAdjustStore();
+  const location = sectionAdjustStore();
 
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [capturedImage, setCapturedImage] = useState("");
@@ -141,7 +141,6 @@ export default function VideoSection() {
             캡처시작
           </Button>
         )}
-
         <AdjustDialog
           onClickOpen={onClickOpenAdjust}
           capturedImage={capturedImage}

@@ -1,4 +1,4 @@
-import { useCallback, useRef, MouseEvent, useState } from "react";
+import { useCallback, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -10,8 +10,9 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-import { imageAdjustStore } from "@/store/imageAdjust";
-import Image from "next/image";
+import { sectionAdjustStore } from "@/store/sectionAdjust";
+import ImageWithSelection from "@/app/_component/ImageWithSelection";
+import { Coordinate } from "@/model/Coordinate";
 
 type Props = {
   onClickOpen: () => void;
@@ -25,37 +26,21 @@ export default function AdjustDialog({
   disabled,
 }: Props) {
   const { toast } = useToast();
-  const location = imageAdjustStore();
+  const imageAdjustState = sectionAdjustStore();
 
-  const [left, setLeft] = useState<number>(0);
-  const [top, setTop] = useState<number>(0);
-  const imageRef = useRef<HTMLImageElement>(null);
+  const [realCoords, setRealCoords] = useState<Coordinate>({
+    left: 0,
+    top: 0,
+    width: 0,
+    height: 0,
+  });
 
   const onClickSave = useCallback(() => {
-    location.setState({ left, top });
+    imageAdjustState.setState({ ...realCoords });
     toast({
       title: "저장되었습니다.",
     });
-  }, [left, top, location, toast]);
-
-  const onClickImage = useCallback(
-    (event: MouseEvent) => {
-      if (!imageRef.current) {
-        console.error("Image not loaded");
-        return;
-      }
-      const rect = imageRef.current.getBoundingClientRect();
-      const x =
-        (event.clientX - rect.left) *
-        (imageRef.current.naturalWidth / rect.width);
-      const y =
-        (event.clientY - rect.top) *
-        (imageRef.current.naturalHeight / rect.height);
-      setLeft(x);
-      setTop(y);
-    },
-    [imageRef],
-  );
+  }, [imageAdjustState, realCoords, toast]);
 
   return (
     <Dialog>
@@ -71,20 +56,11 @@ export default function AdjustDialog({
             이미지 인식 위치를 조절합니다. 예시 이미지를 참조해서 조정해주세요.
           </DialogDescription>
         </DialogHeader>
-        <div>
-          {capturedImage && (
-            <Image
-              src={capturedImage}
-              alt="capturedImage"
-              width={0}
-              height={0}
-              sizes="100vw"
-              className="w-full h-auto"
-              onClick={onClickImage}
-              ref={imageRef}
-            />
-          )}
-        </div>
+        <ImageWithSelection
+          capturedImage={capturedImage}
+          realCoords={realCoords}
+          setRealCoords={setRealCoords}
+        />
         <DialogFooter>
           <Button onClick={onClickSave}>저장</Button>
         </DialogFooter>
