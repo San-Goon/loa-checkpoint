@@ -58,25 +58,26 @@ export default function VideoSection() {
 
     ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
 
+    const rectangle = {
+      left: location.left,
+      top: location.top,
+      width: location.width,
+      height: location.height,
+    };
+
     captureIntervalId.current = window.setInterval(async () => {
       const value = [];
       // @ts-ignore
       const worker = await createWorker(["kor", "eng"]);
-      const rectangle = {
-        left: location.left,
-        top: location.top,
-        width: 180,
-        height: 285,
-      };
       const {
         data: { text },
       } = await worker.recognize(canvas, { rectangle });
-      const splicedText = text.split("\n");
-      for (let i = 0; i < splicedText.length; i += 6) {
-        value.push(splicedText[i]);
-      }
-      setRecognized(value);
-      console.log("value: ", value);
+      // const splicedText = text.split("\n");
+      // for (let i = 0; i < splicedText.length; i += 6) {
+      //   value.push(splicedText[i]);
+      // }
+      // setRecognized(value);
+      console.log("value: ", text);
       await worker.terminate();
     }, 5000);
   }, [location, videoRef, canvasRef]);

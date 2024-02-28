@@ -37,16 +37,27 @@ export default function ImageWithSelection({
         console.error("Image not loaded");
         return;
       }
+      if (!(e.target instanceof Element)) {
+        console.error("Invalid event target");
+        return;
+      }
       setSelecting(true);
       const rect = imageRef.current.getBoundingClientRect();
       const left =
-        (e.clientX - rect.left) * (imageRef.current.naturalWidth / rect.width);
+        (e.clientX - rect.left - 1) *
+        (imageRef.current.naturalWidth / rect.width);
       const top =
-        (e.clientY - rect.top) * (imageRef.current.naturalHeight / rect.height);
-      setCoords({ ...coords, left: e.clientX, top: e.clientY });
+        (e.clientY - rect.top - 3) *
+        (imageRef.current.naturalHeight / rect.height);
+      setCoords({
+        left: e.clientX - rect.left - 1,
+        top: e.clientY - rect.top - 3,
+        width: 0,
+        height: 0,
+      });
       setRealCoords({ ...realCoords, left, top });
     },
-    [coords, realCoords, setRealCoords],
+    [realCoords, setRealCoords],
   );
 
   const mouseMoveHandler = useCallback(
@@ -58,13 +69,15 @@ export default function ImageWithSelection({
       }
       const rect = imageRef.current.getBoundingClientRect();
       const width =
-        (e.clientX - rect.left) * (imageRef.current.naturalWidth / rect.width);
+        (e.clientX - rect.left - 1) *
+        (imageRef.current.naturalWidth / rect.width);
       const height =
-        (e.clientY - rect.top) * (imageRef.current.naturalHeight / rect.height);
+        (e.clientY - rect.top - 3) *
+        (imageRef.current.naturalHeight / rect.height);
       setCoords({
         ...coords,
-        width: e.clientX - coords.left,
-        height: e.clientY - coords.top,
+        width: e.clientX - rect.left - 1 - coords.left,
+        height: e.clientY - rect.top - 3 - coords.top,
       });
       setRealCoords({
         ...realCoords,
@@ -83,10 +96,11 @@ export default function ImageWithSelection({
     <div>
       {capturedImage && (
         <div
-          className="w-full h-auto"
+          className="w-full h-full relative"
           onMouseDown={mouseDownHandler}
           onMouseMove={mouseMoveHandler}
           onMouseUp={mouseUpHandler}
+          draggable={false}
         >
           <Image
             src={capturedImage}
