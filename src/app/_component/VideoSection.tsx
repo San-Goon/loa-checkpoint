@@ -6,9 +6,11 @@ import { createScheduler, createWorker } from "tesseract.js";
 import { useActionsStore } from "@/store/actions";
 import AdjustDialog from "@/app/_component/AdjustDialog";
 import { sectionAdjustStore } from "@/store/sectionAdjust";
+import { useCharactersStore } from "@/store/characters";
 
 export default function VideoSection() {
   const OCR = useActionsStore((state) => state.OCR);
+  const setRecognized = useCharactersStore((state) => state.setRecognized);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const captureIntervalId = useRef<number | null>(null);
@@ -16,8 +18,6 @@ export default function VideoSection() {
 
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [capturedImage, setCapturedImage] = useState("");
-
-  const [recognized, setRecognized] = useState<string[]>([]);
 
   const [isSharing, setIsSharing] = useState<boolean>(false);
   const [isCapturing, setIsCapturing] = useState<boolean>(false);
@@ -98,7 +98,7 @@ export default function VideoSection() {
       setRecognized(results.map((r) => r.data.text.trim()));
       await scheduler.terminate();
     }, 5000);
-  }, [captureVideo, location.left, location.top]);
+  }, [captureVideo, location.left, location.top, setRecognized]);
 
   const stopCapture = useCallback(() => {
     setIsCapturing(false);
@@ -140,8 +140,6 @@ export default function VideoSection() {
   }, [stream]);
 
   if (!OCR) return null;
-
-  console.log("recognized!", recognized);
 
   return (
     <div className="w-4/12">
