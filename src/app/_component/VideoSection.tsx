@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { createWorker } from "tesseract.js";
+import { createScheduler, createWorker } from "tesseract.js";
 import { useActionsStore } from "@/store/actions";
 import AdjustDialog from "@/app/_component/AdjustDialog";
 import { sectionAdjustStore } from "@/store/sectionAdjust";
@@ -58,27 +58,65 @@ export default function VideoSection() {
 
     ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
 
-    const rectangle = {
-      left: location.left,
-      top: location.top,
-      width: location.width,
-      height: location.height,
-    };
+    const rectangles = [
+      {
+        left: location.left,
+        top: location.top,
+        width: 187,
+        height: 22,
+      },
+      {
+        left: location.left,
+        top: location.top + 87,
+        width: 187,
+        height: 22,
+      },
+      {
+        left: location.left,
+        top: location.top + 174,
+        width: 187,
+        height: 22,
+      },
+      {
+        left: location.left,
+        top: location.top + 261,
+        width: 187,
+        height: 22,
+      },
+    ];
 
     captureIntervalId.current = window.setInterval(async () => {
-      const value = [];
+      const scheduler = createScheduler();
       // @ts-ignore
-      const worker = await createWorker(["kor", "eng"]);
-      const {
-        data: { text },
-      } = await worker.recognize(canvas, { rectangle });
+      const worker1 = await createWorker(["kor", "eng"]);
+      // @ts-ignore
+      const worker2 = await createWorker(["kor", "eng"]);
+      // @ts-ignore
+      const worker3 = await createWorker(["kor", "eng"]);
+      // @ts-ignore
+      const worker4 = await createWorker(["kor", "eng"]);
+      scheduler.addWorker(worker1);
+      scheduler.addWorker(worker2);
+      scheduler.addWorker(worker3);
+      scheduler.addWorker(worker4);
+      const results = await Promise.all(
+        rectangles.map((rectangle) =>
+          scheduler.addJob("recognize", canvas, { rectangle }),
+        ),
+      );
+      // const {
+      //   data: { text },
+      // } = await worker.recognize(canvas, { rectangle });
       // const splicedText = text.split("\n");
       // for (let i = 0; i < splicedText.length; i += 6) {
       //   value.push(splicedText[i]);
       // }
       // setRecognized(value);
-      console.log("value: ", text);
-      await worker.terminate();
+      console.log(
+        "results!",
+        results.map((r) => r.data.text.trim()),
+      );
+      await scheduler.terminate();
     }, 5000);
   }, [location, videoRef, canvasRef]);
 
