@@ -31,8 +31,6 @@ export default function AdjustDialog({
   const [realCoords, setRealCoords] = useState<Coordinate>({
     left: 0,
     top: 0,
-    width: 0,
-    height: 0,
   });
 
   const onClickSave = useCallback(() => {
@@ -58,7 +56,6 @@ export default function AdjustDialog({
         </DialogHeader>
         <ImageWithSelection
           capturedImage={capturedImage}
-          realCoords={realCoords}
           setRealCoords={setRealCoords}
         />
         <DialogFooter>

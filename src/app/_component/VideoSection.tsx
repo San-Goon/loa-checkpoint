@@ -22,52 +22,45 @@ export default function VideoSection() {
   const [isSharing, setIsSharing] = useState<boolean>(false);
   const [isCapturing, setIsCapturing] = useState<boolean>(false);
 
-  const onClickOpenAdjust = useCallback(() => {
+  const captureVideo = useCallback(() => {
     const video = videoRef.current;
     const canvas = canvasRef.current;
 
-    if (!video || !canvas) return;
+    if (!video || !canvas) return "break";
 
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
 
     const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    if (!ctx) return "break";
 
     ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
-    canvas.toBlob((blob) => {
+  }, []);
+
+  const onClickOpenAdjust = useCallback(() => {
+    if (captureVideo() === "break") return;
+    canvasRef?.current?.toBlob((blob) => {
       if (blob) {
         const imageUrl = URL.createObjectURL(blob);
         setCapturedImage(imageUrl);
       }
     });
-  }, [videoRef, canvasRef]);
+  }, [captureVideo]);
 
   const startCapture = useCallback(() => {
+    if (captureVideo() === "break") return;
     setIsCapturing(true);
-    const video = videoRef.current;
-    const canvas = canvasRef.current;
-
-    if (!video || !canvas) return;
-
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
 
     const rectangles = [
       {
         left: location.left,
         top: location.top,
-        width: 187,
-        height: 22,
+        width: 187, // 1920*1080 기준 12자 캐릭명길이의 px
+        height: 22, // 1920*1080 기준 캐릭명 영역의 height
       },
       {
         left: location.left,
-        top: location.top + 87,
+        top: location.top + 87, // 1920*1080 기준 첫번째 캐릭명과 2번째 캐릭명의 차이: 87px
         width: 187,
         height: 22,
       },
@@ -87,38 +80,25 @@ export default function VideoSection() {
 
     captureIntervalId.current = window.setInterval(async () => {
       const scheduler = createScheduler();
-      // @ts-ignore
-      const worker1 = await createWorker(["kor", "eng"]);
-      // @ts-ignore
-      const worker2 = await createWorker(["kor", "eng"]);
-      // @ts-ignore
-      const worker3 = await createWorker(["kor", "eng"]);
-      // @ts-ignore
-      const worker4 = await createWorker(["kor", "eng"]);
-      scheduler.addWorker(worker1);
-      scheduler.addWorker(worker2);
-      scheduler.addWorker(worker3);
-      scheduler.addWorker(worker4);
+      for (let i = 0; i < 4; i++) {
+        // 신청칸이 4명까지이므로 4번 worker 생성
+        // @ts-ignore
+        const worker = await createWorker(["kor", "eng"]);
+        scheduler.addWorker(worker);
+      }
       const results = await Promise.all(
         rectangles.map((rectangle) =>
-          scheduler.addJob("recognize", canvas, { rectangle }),
+          scheduler.addJob(
+            "recognize",
+            canvasRef.current as HTMLCanvasElement,
+            { rectangle },
+          ),
         ),
       );
-      // const {
-      //   data: { text },
-      // } = await worker.recognize(canvas, { rectangle });
-      // const splicedText = text.split("\n");
-      // for (let i = 0; i < splicedText.length; i += 6) {
-      //   value.push(splicedText[i]);
-      // }
-      // setRecognized(value);
-      console.log(
-        "results!",
-        results.map((r) => r.data.text.trim()),
-      );
+      setRecognized(results.map((r) => r.data.text.trim()));
       await scheduler.terminate();
     }, 5000);
-  }, [location, videoRef, canvasRef]);
+  }, [captureVideo, location.left, location.top]);
 
   const stopCapture = useCallback(() => {
     setIsCapturing(false);
@@ -160,6 +140,8 @@ export default function VideoSection() {
   }, [stream]);
 
   if (!OCR) return null;
+
+  console.log("recognized!", recognized);
 
   return (
     <div className="w-4/12">
