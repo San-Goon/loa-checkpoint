@@ -1,36 +1,35 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 로아 검문소
+> 로스트아크 군장검사를 OCR 기능을 이용하여 자동화한 웹입니다.
 
-## Getting Started
 
-First, run the development server:
+![](../header.png)
 
-```bash
+## 개발 환경 실행 방법
+Node v20.11.0
+```sh
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 사용 예제
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+스크린 샷과 코드 예제를 통해 사용 방법을 자세히 설명합니다.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## 사용된 기술
+* TypeScript
+* React v18
+* Next.js v14
+* Tesseract.js v5
+* Tanstack Query v5
+* Zustand v4
+* Shadcn/UI
+* Tailwind CSS
 
-## Learn More
+## 폴더구조
 
-To learn more about Next.js, take a look at the following resources:
+## 릴리즈노트
+* 0.0.1
+    * 작업 진행 중
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## API Documentation
+[Lostark OpenAPI Developer Portal](https://developer-lostark.game.onstove.com/getting-started)
