@@ -12,8 +12,7 @@ npm run dev
 ```
 
 ## 사용 예제
-
-스크린 샷과 코드 예제를 통해 사용 방법을 자세히 설명합니다.
+![-Chrome2024-03-0619-43-11-ezgif com-cut](https://github.com/San-Goon/loa-checkpoint/assets/84852012/6a265e3f-0b96-4a91-9a54-31e79268510a)
 
 ## 사용된 기술
 * TypeScript
