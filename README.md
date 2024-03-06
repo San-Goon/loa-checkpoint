@@ -12,13 +12,12 @@ npm run dev
 ```
 
 ## 사용 예제
-
-스크린 샷과 코드 예제를 통해 사용 방법을 자세히 설명합니다.
+![-Chrome2024-03-0619-43-11-ezgif com-cut](https://github.com/San-Goon/loa-checkpoint/assets/84852012/6a265e3f-0b96-4a91-9a54-31e79268510a)
 
 ## 사용된 기술
 * TypeScript
 * React v18
-* Next.js v14
+* Next.js v14 (App Router)
 * Tesseract.js v5
 * Tanstack Query v5
 * Zustand v4
@@ -26,6 +25,19 @@ npm run dev
 * Tailwind CSS
 
 ## 폴더구조
+```bash
+    ├── public                  # 폰트, 이미지 등
+    ├── src                     
+        ├── app
+           ├──_component        # 페이지 구현을 위한 컴포넌트
+           ├──_lib              # fetch 함수    
+        ├── components          # shadcn 으로 생성한 컴포넌트
+        ├── lib                 # Global 하게 사용되는 상수, 함수 모음
+        ├── model               # Type 정의 모음
+        ├── store               # Zustand state store
+    ├── README.md               
+    └── ...
+```
 
 ## 릴리즈노트
 * 0.0.1
