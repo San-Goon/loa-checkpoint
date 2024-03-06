@@ -95,6 +95,10 @@ export default function VideoSection() {
           ),
         ),
       );
+      console.log(
+        "recognized texts: ",
+        results.map((r) => r.data.text.trim()),
+      );
       setRecognized(results.map((r) => r.data.text.trim()));
       await scheduler.terminate();
     }, 5000);
