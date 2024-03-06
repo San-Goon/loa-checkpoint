@@ -1,6 +1,7 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { GemType } from "@/model/GemType";
+import { MAIN_ENGRAVE_LIST } from "@/lib/constants";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -14,6 +15,7 @@ function htmlToStr(html: string) {
 export function responseProcessor(res: any) {
   if (!res) return null;
   const name = res.ArmoryProfile.CharacterName;
+  let mainEngrave = "";
   const itemLv = res.ArmoryProfile.ItemAvgLevel;
   const expLv = res.ArmoryProfile.ExpeditionLevel;
   const title = res.ArmoryProfile.Title;
@@ -63,9 +65,16 @@ export function responseProcessor(res: any) {
 
   // 각인 로직
   for (const { Name } of res.ArmoryEngraving.Effects) {
-    const separatedName = Name.split(" ");
-    const level = separatedName.at(-1);
-    if (separatedName[1] === "감소") engrave.deBuff += level;
+    const [name, level]: string[] = Name.split(" Lv. ");
+    if (mainEngrave === "" && name in MAIN_ENGRAVE_LIST) {
+      mainEngrave = MAIN_ENGRAVE_LIST[name];
+    }
+    if (
+      name === "공격력 감소" ||
+      name === "방어력 감소" ||
+      name === "이동속도 감소"
+    )
+      engrave.deBuff += level;
     else engrave.buff += level;
   }
 
@@ -155,6 +164,7 @@ export function responseProcessor(res: any) {
   }
   return {
     name,
+    mainEngrave,
     itemLv,
     expLv,
     title,

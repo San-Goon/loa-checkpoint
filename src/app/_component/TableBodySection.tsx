@@ -26,10 +26,10 @@ export default function TableBodySection() {
         .map((query) => responseProcessor(query.data))
         .map((data) => {
           if (!data) return;
-          console.log("data.tripod", data.tripod);
           return (
             <TableRow key={data.name}>
               <TableCell>{data.name}</TableCell>
+              <TableCell>{data.mainEngrave}</TableCell>
               <TableCell>{data.itemLv}</TableCell>
               <TableCell>{data.expLv}</TableCell>
               <TableCell>
