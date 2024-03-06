@@ -24,9 +24,9 @@ export default function TableBodySection() {
     <TableBody>
       {queries
         .map((query) => responseProcessor(query.data))
-        .map((data, index) => {
+        .map((data) => {
           if (!data) return;
-          console.log("data.gem", data.gem);
+          console.log("data.tripod", data.tripod);
           return (
             <TableRow key={data.name}>
               <TableCell>{data.name}</TableCell>
@@ -36,7 +36,11 @@ export default function TableBodySection() {
                 {data.engrave.buff}
                 <span className="text-red-600">{data.engrave.deBuff}</span>
               </TableCell>
-              <TableCell>{data.totalStats}</TableCell>
+              <TableCell>
+                {data.stats.map((stat) => (
+                  <div key={stat[0]}>{stat[0] + stat[1]}</div>
+                ))}
+              </TableCell>
               <TableCell>
                 <div>{data.weapon.level + "제"}</div>
                 {data.weapon.quality}
@@ -52,8 +56,18 @@ export default function TableBodySection() {
                     );
                 })}
               </TableCell>
-              <TableCell>{data.tripod["5"]}</TableCell>
-              <TableCell>{data.cardSet}</TableCell>
+              <TableCell>
+                {[5, 4, 3, 2, 1].map((item) => {
+                  if (data.tripod[item]) {
+                    return (
+                      <Fragment key={item + "tripod"}>
+                        {`Lv.${item}: ${data.tripod[item]}`}{" "}
+                      </Fragment>
+                    );
+                  }
+                })}
+              </TableCell>
+              <TableCell>{data.cardSet || "노카드"}</TableCell>
               <TableCell>
                 <Link
                   href={`https://sasagefind.com/?who=${data.name}`}

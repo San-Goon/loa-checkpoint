@@ -21,13 +21,20 @@ export function responseProcessor(res: any) {
     buff: "",
     deBuff: "",
   };
-  const totalStats = 0;
+  const stats = [];
   const tooltip = JSON.parse(res.ArmoryEquipment[0].Tooltip).Element_001.value;
   const weapon = {
     level: htmlToStr(tooltip.leftStr2).split(" ")[2],
     quality: tooltip.qualityValue,
   };
   let cardSet = "";
+
+  for (const { Type, Value } of res.ArmoryProfile.Stats) {
+    if ((Type === "치명" || Type === "특화" || Type === "신속") && Value >= 200)
+      stats.push([Type, Value]);
+  }
+
+  stats.sort((a, b) => b[1] - a[1]);
 
   const gem: GemType = {
     "10멸": 0,
@@ -152,7 +159,7 @@ export function responseProcessor(res: any) {
     expLv,
     title,
     engrave,
-    totalStats,
+    stats,
     weapon,
     gem,
     tripod,
