@@ -168,7 +168,7 @@ export default function VideoSection() {
         <AdjustDialog
           onClickOpen={onClickOpenAdjust}
           capturedImage={capturedImage}
-          disabled={!isSharing}
+          disabled={!isSharing && !isCapturing}
         />
       </div>
     </div>

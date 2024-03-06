@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -59,7 +60,9 @@ export default function AdjustDialog({
           setRealCoords={setRealCoords}
         />
         <DialogFooter>
-          <Button onClick={onClickSave}>저장</Button>
+          <DialogClose asChild>
+            <Button onClick={onClickSave}>저장</Button>
+          </DialogClose>
         </DialogFooter>
       </DialogContent>
     </Dialog>
