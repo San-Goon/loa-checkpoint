@@ -47,7 +47,7 @@ export default function AdjustDialog({
           위치 조절
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-max">
+      <DialogContent className="max-w-max w-11/12">
         <DialogHeader>
           <DialogTitle>위치 조절</DialogTitle>
           <DialogDescription>

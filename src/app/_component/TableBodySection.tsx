@@ -1,3 +1,5 @@
+"use client";
+
 import { TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { useCharactersStore } from "@/store/characters";
 import { useTokenStore } from "@/store/token";

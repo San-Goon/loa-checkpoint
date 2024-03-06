@@ -1,3 +1,5 @@
+"use client";
+
 import { Input } from "@/components/ui/input";
 import { ChangeEvent, FormEvent, useCallback, useState } from "react";
 import { useCharactersStore } from "@/store/characters";

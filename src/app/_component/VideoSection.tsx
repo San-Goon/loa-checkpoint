@@ -146,7 +146,7 @@ export default function VideoSection() {
   if (!OCR) return null;
 
   return (
-    <div className="w-4/12">
+    <div>
       <div className="flex justify-center">
         <video className="border-2" ref={videoRef} autoPlay muted />
         <canvas className="hidden" ref={canvasRef} />
