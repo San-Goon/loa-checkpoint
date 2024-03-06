@@ -86,6 +86,7 @@ export default function VideoSection() {
         const worker = await createWorker(["kor", "eng"]);
         scheduler.addWorker(worker);
       }
+      captureVideo();
       const results = await Promise.all(
         rectangles.map((rectangle) =>
           scheduler.addJob(
