@@ -10,26 +10,26 @@ export default function Header() {
           <Link href="/" className="flex items-center space-x-2">
             <span className="inline-block font-bold">로아검문소</span>
           </Link>
-          <nav className="flex gap-6">
-            <Link
-              href={"/"}
-              className={cn(
-                "flex items-center text-sm font-medium text-muted-foreground",
-                // item.disabled && "cursor-not-allowed opacity-80",
-              )}
-            >
-              군장검사
-            </Link>
-            <Link
-              href={"/jobsearch"}
-              className={cn(
-                "flex items-center text-sm font-medium text-muted-foreground",
-                // item.disabled && "cursor-not-allowed opacity-80",
-              )}
-            >
-              구인구직
-            </Link>
-          </nav>
+          {/*<nav className="flex gap-6">*/}
+          {/*  <Link*/}
+          {/*    href={"/"}*/}
+          {/*    className={cn(*/}
+          {/*      "flex items-center text-sm font-medium text-muted-foreground",*/}
+          {/*      // item.disabled && "cursor-not-allowed opacity-80",*/}
+          {/*    )}*/}
+          {/*  >*/}
+          {/*    군장검사*/}
+          {/*  </Link>*/}
+          {/*  <Link*/}
+          {/*    href={"/jobsearch"}*/}
+          {/*    className={cn(*/}
+          {/*      "flex items-center text-sm font-medium text-muted-foreground",*/}
+          {/*      // item.disabled && "cursor-not-allowed opacity-80",*/}
+          {/*    )}*/}
+          {/*  >*/}
+          {/*    구인구직*/}
+          {/*  </Link>*/}
+          {/*</nav>*/}
         </div>
       </div>
     </header>

@@ -4,7 +4,7 @@ import OCRSwitch from "@/app/_component/OCRSwitch";
 export default function ActionSection() {
   return (
     <div className="flex gap-2">
-      <SettingDialog />
+      {/*<SettingDialog />*/}
       <OCRSwitch />
     </div>
   );
