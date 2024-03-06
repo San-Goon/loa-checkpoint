@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createScheduler, createWorker } from "tesseract.js";
 import { useActionsStore } from "@/store/actions";
 import AdjustDialog from "@/app/_component/AdjustDialog";
@@ -14,13 +14,43 @@ export default function VideoSection() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const captureIntervalId = useRef<number | null>(null);
-  const location = sectionAdjustStore();
+  const { left, top } = sectionAdjustStore();
 
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [capturedImage, setCapturedImage] = useState("");
 
   const [isSharing, setIsSharing] = useState<boolean>(false);
   const [isCapturing, setIsCapturing] = useState<boolean>(false);
+
+  const rectangles = useMemo(
+    () => [
+      {
+        left,
+        top,
+        width: 187, // 1920*1080 기준 12자 캐릭명길이의 px
+        height: 22, // 1920*1080 기준 캐릭명 영역의 height
+      },
+      {
+        left,
+        top: top + 87, // 1920*1080 기준 첫번째 캐릭명과 2번째 캐릭명의 차이: 87px
+        width: 187,
+        height: 22,
+      },
+      {
+        left,
+        top: top + 174,
+        width: 187,
+        height: 22,
+      },
+      {
+        left,
+        top: top + 261,
+        width: 187,
+        height: 22,
+      },
+    ],
+    [left, top],
+  );
 
   const captureVideo = useCallback(() => {
     const video = videoRef.current;
@@ -51,33 +81,6 @@ export default function VideoSection() {
     if (captureVideo() === "break") return;
     setIsCapturing(true);
 
-    const rectangles = [
-      {
-        left: location.left,
-        top: location.top,
-        width: 187, // 1920*1080 기준 12자 캐릭명길이의 px
-        height: 22, // 1920*1080 기준 캐릭명 영역의 height
-      },
-      {
-        left: location.left,
-        top: location.top + 87, // 1920*1080 기준 첫번째 캐릭명과 2번째 캐릭명의 차이: 87px
-        width: 187,
-        height: 22,
-      },
-      {
-        left: location.left,
-        top: location.top + 174,
-        width: 187,
-        height: 22,
-      },
-      {
-        left: location.left,
-        top: location.top + 261,
-        width: 187,
-        height: 22,
-      },
-    ];
-
     captureIntervalId.current = window.setInterval(async () => {
       const scheduler = createScheduler();
       for (let i = 0; i < 4; i++) {
@@ -103,7 +106,7 @@ export default function VideoSection() {
       setRecognized(results.map((r) => r.data.text.trim()));
       await scheduler.terminate();
     }, 5000);
-  }, [captureVideo, location.left, location.top, setRecognized]);
+  }, [captureVideo, setRecognized, rectangles]);
 
   const stopCapture = useCallback(() => {
     setIsCapturing(false);
@@ -148,9 +151,27 @@ export default function VideoSection() {
 
   return (
     <div>
-      <div className="flex justify-center">
+      <div className="flex justify-center relative">
         <video className="border-2" ref={videoRef} autoPlay muted />
         <canvas className="hidden" ref={canvasRef} />
+        {!!left &&
+          !!top &&
+          rectangles.map(({ left, top, width, height }) => {
+            const rect = videoRef.current!.getBoundingClientRect();
+            const ratio = rect.width / videoRef.current!.videoWidth;
+            return (
+              <div
+                key={top}
+                className="border-2 border-emerald-400 absolute"
+                style={{
+                  left: left * ratio,
+                  top: top * ratio,
+                  width: width * ratio,
+                  height: height * ratio,
+                }}
+              />
+            );
+          })}
       </div>
       <div className="flex justify-center gap-1 pt-2">
         {isSharing ? (
