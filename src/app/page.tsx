@@ -9,9 +9,9 @@ export default function Home() {
         <ActionSection />
         <TokenSection />
       </div>
-      <div className="flex w-full">
-        <LeftSection />
+      <div className="flex flex-col w-full items-center gap-2">
         <VideoSection />
+        <LeftSection />
       </div>
     </div>
   );
