@@ -115,19 +115,23 @@ export function responseProcessor(res: any) {
         break;
       case "부르는 소리 있도다 (15각성합계)":
         cardSet += "부소";
-        break;
-      default:
-        cardSet = "노카드";
     }
   }
 
   // 보석 계산 로직
   for (const { Name } of res.ArmoryGem.Gems) {
     const doc = htmlToStr(Name);
-    const gemName = doc[4];
-    const gemLv = doc[0];
-    const str = gemLv + gemName;
-    gem[str]++;
+    if (doc[1] === "레") {
+      const gemName = doc[4];
+      const gemLv = doc[0];
+      const str = gemLv + gemName;
+      gem[str]++;
+    } else {
+      const gemName = doc[5];
+      const gemLv = "10";
+      const str = gemLv + gemName;
+      gem[str]++;
+    }
   }
 
   // 트포 계산 로직
