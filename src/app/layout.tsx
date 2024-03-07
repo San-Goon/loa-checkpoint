@@ -11,8 +11,18 @@ import { Toaster } from "@/components/ui/toaster";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "로아검문소",
-  description: "군장검사 자동화 사이트 입니다.",
+  title: "로아검문소: 로스트아크 영상인식 군장검사",
+  description:
+    "로스트아크 군장검사를 영상인식을 통해 자동화시킨 사이트 입니다.",
+  keywords: [
+    "로아",
+    "로스트아크",
+    "군장검사",
+    "공격대",
+    "공격대모집",
+    "구인구직",
+    "캐릭터정보",
+  ],
 };
 
 export default function RootLayout({
