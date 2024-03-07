@@ -31,6 +31,13 @@ export default function Header() {
           {/*  </Link>*/}
           {/*</nav>*/}
         </div>
+        <Link
+          href="https://magenta-forest-566.notion.site/fa0041282edb4fd0ad5dd3a93226af84"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          사용설명서
+        </Link>
       </div>
     </header>
   );
