@@ -184,18 +184,20 @@ export function responseProcessor(res: any) {
     }
 
     // 보석 계산 로직
-    for (const { Name } of res.ArmoryGem.Gems) {
-      const doc = htmlToStr(Name);
-      if (doc[1] === "레") {
-        const gemName = doc[4];
-        const gemLv = doc[0];
-        const str = gemLv + gemName;
-        gem[str]++;
-      } else {
-        const gemName = doc[5];
-        const gemLv = "10";
-        const str = gemLv + gemName;
-        gem[str]++;
+    if (res.ArmoryGem?.Gems) {
+      for (const { Name } of res.ArmoryGem.Gems) {
+        const doc = htmlToStr(Name);
+        if (doc[1] === "레") {
+          const gemName = doc[4];
+          const gemLv = doc[0];
+          const str = gemLv + gemName;
+          gem[str]++;
+        } else {
+          const gemName = doc[5];
+          const gemLv = "10";
+          const str = gemLv + gemName;
+          gem[str]++;
+        }
       }
     }
 

@@ -54,7 +54,7 @@ export default function TableBodySection() {
               </TableCell>
               <TableCell>
                 <div>{data.weapon.level + "제"}</div>
-                {data.weapon.quality}
+                {"품질: " + data.weapon.quality}
               </TableCell>
               <TableCell>
                 {GEM_MAP_ORDER.map((item) => {
