@@ -26,7 +26,7 @@ export default function SearchSection() {
         <Input
           value={name}
           onChange={onChangeName}
-          placeholder="캐릭터명 입력"
+          placeholder="캐릭터 수동 검색"
         />
       </form>
     </div>
