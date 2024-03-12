@@ -32,7 +32,16 @@ export default function TableBodySection() {
             <TableRow key={data.name}>
               <TableCell>{data.name}</TableCell>
               <TableCell>{data.mainEngrave}</TableCell>
-              <TableCell>{data.itemLv}</TableCell>
+              <TableCell>
+                <div>{data.itemLv}</div>
+                <div>{data.elixir}</div>
+                {data.transcendence.total ? (
+                  <>
+                    <div>{`초월합: ${data.transcendence.total}`}</div>
+                    <div>{`초월평균: ${data.transcendence.averageLevel}`}</div>
+                  </>
+                ) : null}
+              </TableCell>
               <TableCell>{data.expLv}</TableCell>
               <TableCell>
                 {data.engrave.buff}

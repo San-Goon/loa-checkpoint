@@ -8,7 +8,7 @@ export default function TableSection() {
         <TableRow>
           <TableHead>이름</TableHead>
           <TableHead>직각</TableHead>
-          <TableHead>템렙</TableHead>
+          <TableHead>장비</TableHead>
           <TableHead>원대렙</TableHead>
           <TableHead>각인</TableHead>
           <TableHead>특성</TableHead>

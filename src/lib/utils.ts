@@ -18,6 +18,12 @@ export function responseProcessor(res: any) {
     const name = res.ArmoryProfile.CharacterName;
     let mainEngrave = "";
     const itemLv = res.ArmoryProfile.ItemAvgLevel;
+    let elixir = "";
+    const transcendence = {
+      averageLevel: 0,
+      total: 0,
+    };
+
     const expLv = res.ArmoryProfile.ExpeditionLevel;
     const title = res.ArmoryProfile.Title;
     const engrave = {
@@ -67,6 +73,44 @@ export function responseProcessor(res: any) {
     };
 
     const tripod: { [key: string]: number } = {};
+
+    // 초월 및 엘릭서 로직
+    for (let i = 1; i <= 5; i++) {
+      const indentStringGroup = []; // 초월, 엘릭서, 세트렙 정보가 담깁니다.
+      const tooltip = JSON.parse(res.ArmoryEquipment[i].Tooltip);
+      for (const key in tooltip) {
+        if (tooltip[key].type === "IndentStringGroup") {
+          indentStringGroup.push(tooltip[key].value);
+        }
+      }
+      // 엘릭서 로직
+      if (i === 1) {
+        for (const { Element_000 } of indentStringGroup) {
+          const splittedStr = htmlToStr(Element_000.topStr).split(" ");
+          if (
+            splittedStr[0] === "연성" &&
+            splittedStr[1] === "추가" &&
+            splittedStr.length === 4
+          ) {
+            elixir += splittedStr[2].substring(2);
+            if (splittedStr[3] === "(1단계)") {
+              elixir += "35+";
+            } else if (splittedStr[3] === "(2단계)") {
+              elixir += "40+";
+            }
+          }
+        }
+      }
+      // 초월 로직
+      for (const { Element_000 } of indentStringGroup) {
+        const splittedStr = htmlToStr(Element_000.topStr).split(" ");
+        if (splittedStr[0] === "[초월]") {
+          transcendence.averageLevel += Number(splittedStr[1][0]);
+          transcendence.total += Number(splittedStr[2]);
+        }
+      }
+    }
+    transcendence.averageLevel /= 5;
 
     // 각인 로직
     for (const { Name } of res.ArmoryEngraving.Effects) {
@@ -171,6 +215,8 @@ export function responseProcessor(res: any) {
       name,
       mainEngrave,
       itemLv,
+      elixir,
+      transcendence,
       expLv,
       title,
       engrave,
