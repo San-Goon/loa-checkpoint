@@ -2,24 +2,35 @@ import { create } from "zustand";
 
 interface CharactersState {
   recognized: string[];
-  added: string[];
-  typed: string;
+  typed: string[];
   setRecognized(state: string[]): void;
   setTyped(state: string): void;
+  deleteName(state: string): void;
 }
 
 export const useCharactersStore = create<CharactersState>((set, get) => ({
   recognized: [],
-  added: [],
-  typed: "",
-  setRecognized(state) {
-    const { recognized } = get();
-    set({
-      recognized: Array.from(new Set([...recognized, ...state])),
-      added: [...state].filter((item) => !recognized.includes(item)),
+  typed: [],
+  setRecognized(recognized) {
+    set((prev) => {
+      const copiedObj = { ...prev };
+      copiedObj.recognized = recognized;
+      return copiedObj;
     });
   },
   setTyped(typed) {
-    set({ typed });
+    set((prev) => {
+      const copiedObj = { ...prev };
+      copiedObj.typed = Array.from(new Set([...prev.typed, typed]));
+      return copiedObj;
+    });
+  },
+  deleteName(name) {
+    set((prev) => {
+      const copiedObj = { ...prev };
+      copiedObj.recognized = prev.recognized.filter((v) => v !== name);
+      copiedObj.typed = prev.typed.filter((v) => v !== name);
+      return copiedObj;
+    });
   },
 }));

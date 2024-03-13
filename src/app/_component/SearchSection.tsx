@@ -5,15 +5,15 @@ import { ChangeEvent, FormEvent, useCallback, useState } from "react";
 import { useCharactersStore } from "@/store/characters";
 
 export default function SearchSection() {
-  const setRecognized = useCharactersStore((state) => state.setRecognized);
+  const setTyped = useCharactersStore((state) => state.setTyped);
   const [name, setName] = useState<string>("");
 
   const onSubmit = useCallback(
-    async (e: FormEvent<HTMLFormElement>) => {
+    (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      setRecognized([name]);
+      setTyped(name);
     },
-    [setRecognized, name],
+    [setTyped, name],
   );
 
   const onChangeName = useCallback((e: ChangeEvent<HTMLInputElement>) => {
