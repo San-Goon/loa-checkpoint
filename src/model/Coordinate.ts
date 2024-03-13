@@ -1,6 +1,7 @@
 export interface Coordinate {
   left: number;
   top: number;
-  width?: number;
-  height?: number;
+  width: number;
+  height: number;
+  gap: number;
 }

@@ -233,3 +233,54 @@ export function responseProcessor(res: any) {
     return null;
   }
 }
+
+export function getRestCoords(width: number) {
+  if (width >= 2560) {
+    return {
+      width: 245,
+      height: 30,
+      gap: 116,
+    };
+  }
+  if (width >= 1920) {
+    return {
+      width: 175,
+      height: 22,
+      gap: 87,
+    };
+  }
+  if (width >= 1680) {
+    return {
+      width: 155,
+      height: 20,
+      gap: 78,
+    };
+  }
+  if (width >= 1600) {
+    return {
+      width: 140,
+      height: 18,
+      gap: 73,
+    };
+  }
+  if (width >= 1440) {
+    return {
+      width: 130,
+      height: 17,
+      gap: 66,
+    };
+  }
+  if (width >= 1360) {
+    return {
+      width: 122,
+      height: 17,
+      gap: 62,
+    };
+  } else {
+    return {
+      width: 115,
+      height: 17,
+      gap: 59,
+    };
+  }
+}

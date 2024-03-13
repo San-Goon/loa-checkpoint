@@ -14,7 +14,7 @@ export default function VideoSection() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const captureIntervalId = useRef<number | null>(null);
-  const { left, top } = sectionAdjustStore();
+  const { left, top, width, height, gap } = sectionAdjustStore();
 
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [capturedImage, setCapturedImage] = useState("");
@@ -27,29 +27,29 @@ export default function VideoSection() {
       {
         left,
         top,
-        width: 187, // 1920*1080 기준 12자 캐릭명길이의 px
-        height: 22, // 1920*1080 기준 캐릭명 영역의 height
+        width,
+        height,
       },
       {
         left,
-        top: top + 87, // 1920*1080 기준 첫번째 캐릭명과 2번째 캐릭명의 차이: 87px
-        width: 187,
-        height: 22,
+        top: top + gap,
+        width,
+        height,
       },
       {
         left,
-        top: top + 174,
-        width: 187,
-        height: 22,
+        top: top + gap * 2,
+        width,
+        height,
       },
       {
         left,
-        top: top + 261,
-        width: 187,
-        height: 22,
+        top: top + gap * 3,
+        width,
+        height,
       },
     ],
-    [left, top],
+    [gap, height, left, top, width],
   );
 
   const captureVideo = useCallback(() => {
@@ -105,7 +105,7 @@ export default function VideoSection() {
       );
       setRecognized(results.map((r) => r.data.text.trim()));
       await scheduler.terminate();
-    }, 5000);
+    }, 3000);
   }, [captureVideo, setRecognized, rectangles]);
 
   const stopCapture = useCallback(() => {

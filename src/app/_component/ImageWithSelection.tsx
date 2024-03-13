@@ -8,6 +8,7 @@ import {
   useState,
 } from "react";
 import { Coordinate } from "@/model/Coordinate";
+import { getRestCoords } from "@/lib/utils";
 
 type Props = {
   capturedImage: string;
@@ -25,9 +26,8 @@ export default function ImageWithSelection({
     top: 0,
     width: 0,
     height: 0,
+    gap: 0,
   });
-
-  const [gap, setGap] = useState<number>(0);
 
   const onClickSection = useCallback(
     (e: MouseEvent<HTMLDivElement>) => {
@@ -46,14 +46,17 @@ export default function ImageWithSelection({
       const top =
         (e.clientY - rect.top - 3) *
         (imageRef.current.naturalHeight / rect.height);
+      const { width, height, gap } = getRestCoords(
+        imageRef.current.naturalWidth,
+      );
       setCoords({
         left: e.clientX - rect.left - 1,
         top: e.clientY - rect.top - 3,
-        width: 175 * (rect.width / imageRef.current.naturalWidth),
-        height: 22 * (rect.height / imageRef.current.naturalHeight),
+        width: width * (rect.width / imageRef.current.naturalWidth),
+        height: height * (rect.height / imageRef.current.naturalHeight),
+        gap: gap * (rect.height / imageRef.current.naturalHeight),
       });
-      setGap(87 * (rect.height / imageRef.current.naturalHeight));
-      setRealCoords({ left, top });
+      setRealCoords({ left, top, width, height, gap });
     },
     [setRealCoords],
   );
@@ -82,7 +85,7 @@ export default function ImageWithSelection({
               className="border-2 border-emerald-400 absolute"
               style={{
                 left: coords.left,
-                top: coords.top + gap * value,
+                top: coords.top + coords.gap * value,
                 width: coords.width,
                 height: coords.height,
               }}
