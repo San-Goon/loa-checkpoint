@@ -23,6 +23,9 @@ export const metadata: Metadata = {
     "구인구직",
     "캐릭터정보",
   ],
+  verification: {
+    google: "IO8qsepjZRvC7Tz1JXVu6-neMi3rYARGSU4wFyj6Qck",
+  },
 };
 
 export default function RootLayout({
