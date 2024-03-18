@@ -8,6 +8,9 @@ import Footer from "@/app/_component/Footer";
 import RQProvider from "@/app/_component/RQProvider";
 import { Toaster } from "@/components/ui/toaster";
 
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -48,6 +51,8 @@ export default function RootLayout({
               <div className="flex-grow">{children}</div>
               <Footer />
             </div>
+            <Analytics />
+            <SpeedInsights />
             <Toaster />
           </RQProvider>
         </ThemeProvider>

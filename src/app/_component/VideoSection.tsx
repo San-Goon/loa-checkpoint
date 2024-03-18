@@ -105,7 +105,7 @@ export default function VideoSection() {
       );
       setRecognized(results.map((r) => r.data.text.trim()));
       await scheduler.terminate();
-    }, 3000);
+    }, 2000);
   }, [captureVideo, setRecognized, rectangles]);
 
   const stopCapture = useCallback(() => {

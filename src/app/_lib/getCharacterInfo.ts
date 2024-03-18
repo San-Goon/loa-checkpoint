@@ -14,5 +14,6 @@ export const getCharacterInfo = async (name: string, token: string) => {
       cache: "no-store",
     },
   );
-  return response.json();
+  const data = await response.json();
+  return { ...data, name };
 };

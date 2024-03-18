@@ -36,7 +36,7 @@ export function SettingDialog() {
     toast({
       title: "저장되었습니다.",
     });
-  }, [toast, expLv, damage]);
+  }, [expLv, damage, cutoffState, toast]);
 
   return (
     <Dialog>
@@ -56,7 +56,7 @@ export function SettingDialog() {
             <Input onChange={onChangeExpLv} value={expLv} />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label>무기공격력</Label>
+            <Label>무기레벨</Label>
             <Input onChange={onChangeDamage} value={damage} />
           </div>
         </div>

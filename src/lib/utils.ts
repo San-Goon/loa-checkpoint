@@ -1,6 +1,5 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { GemType } from "@/model/GemType";
 import { MAIN_ENGRAVE_LIST } from "@/lib/constants";
 
 export function cn(...inputs: ClassValue[]) {
@@ -13,20 +12,21 @@ function htmlToStr(html: string) {
   return doc.body.textContent || "";
 }
 export function responseProcessor(res: any) {
-  if (!res || res.ArmoryProfile.ItemAvgLevel < 1445) return null;
   try {
     const name = res.ArmoryProfile.CharacterName;
-    let mainEngrave = "";
-    const itemLv = res.ArmoryProfile.ItemAvgLevel;
-    let elixir = "";
-    const transcendence = {
-      averageLevel: 0,
-      total: 0,
+    let mainEngraving = "";
+    const equipment = {
+      itemLv: res.ArmoryProfile.ItemAvgLevel,
+      elixir: "",
+      transcendence: {
+        averageLevel: 0,
+        total: 0,
+      },
     };
 
     const expLv = res.ArmoryProfile.ExpeditionLevel;
     const title = res.ArmoryProfile.Title;
-    const engrave = {
+    const engraving = {
       buff: "",
       deBuff: "",
     };
@@ -49,7 +49,7 @@ export function responseProcessor(res: any) {
 
     stats.sort((a, b) => b[1] - a[1]);
 
-    const gem: GemType = {
+    const gems: { [key: string]: number } = {
       "10멸": 0,
       "9멸": 0,
       "8멸": 0,
@@ -72,7 +72,7 @@ export function responseProcessor(res: any) {
       "1홍": 0,
     };
 
-    const tripod: { [key: string]: number } = {};
+    const tripods: { [key: string]: number } = {};
 
     // 초월 및 엘릭서 로직
     for (let i = 1; i <= 5; i++) {
@@ -92,11 +92,11 @@ export function responseProcessor(res: any) {
             splittedStr[1] === "추가" &&
             splittedStr.length === 4
           ) {
-            elixir += splittedStr[2].substring(2);
+            equipment.elixir += splittedStr[2].substring(2);
             if (splittedStr[3] === "(1단계)") {
-              elixir += "35+";
+              equipment.elixir += "35+";
             } else if (splittedStr[3] === "(2단계)") {
-              elixir += "40+";
+              equipment.elixir += "40+";
             }
           }
         }
@@ -105,26 +105,26 @@ export function responseProcessor(res: any) {
       for (const { Element_000 } of indentStringGroup) {
         const splittedStr = htmlToStr(Element_000.topStr).split(" ");
         if (splittedStr[0] === "[초월]") {
-          transcendence.averageLevel += Number(splittedStr[1][0]);
-          transcendence.total += Number(splittedStr[2]);
+          equipment.transcendence.averageLevel += Number(splittedStr[1][0]);
+          equipment.transcendence.total += Number(splittedStr[2]);
         }
       }
     }
-    transcendence.averageLevel /= 5;
+    equipment.transcendence.averageLevel /= 5;
 
     // 각인 로직
     for (const { Name } of res.ArmoryEngraving.Effects) {
       const [name, level]: string[] = Name.split(" Lv. ");
-      if (mainEngrave === "" && name in MAIN_ENGRAVE_LIST) {
-        mainEngrave = MAIN_ENGRAVE_LIST[name];
+      if (mainEngraving === "" && name in MAIN_ENGRAVE_LIST) {
+        mainEngraving = MAIN_ENGRAVE_LIST[name];
       }
       if (
         name === "공격력 감소" ||
         name === "방어력 감소" ||
         name === "이동속도 감소"
       )
-        engrave.deBuff += level;
-      else engrave.buff += level;
+        engraving.deBuff += level;
+      else engraving.buff += level;
     }
 
     // 카드 로직
@@ -191,12 +191,12 @@ export function responseProcessor(res: any) {
           const gemName = doc[4];
           const gemLv = doc[0];
           const str = gemLv + gemName;
-          gem[str]++;
+          gems[str]++;
         } else {
           const gemName = doc[5];
           const gemLv = "10";
           const str = gemLv + gemName;
-          gem[str]++;
+          gems[str]++;
         }
       }
     }
@@ -206,31 +206,28 @@ export function responseProcessor(res: any) {
       if (data.Level >= 4) {
         for (const tripodData of data.Tripods) {
           if (tripodData.IsSelected && tripodData.Level >= 2) {
-            tripod[tripodData.Level]
-              ? tripod[tripodData.Level]++
-              : (tripod[tripodData.Level] = 1);
+            tripods[tripodData.Level]
+              ? tripods[tripodData.Level]++
+              : (tripods[tripodData.Level] = 1);
           }
         }
       }
     }
     return {
       name,
-      mainEngrave,
-      itemLv,
-      elixir,
-      transcendence,
+      mainEngraving,
+      equipment,
       expLv,
       title,
-      engrave,
+      engraving,
       stats,
       weapon,
-      gem,
-      tripod,
+      gems,
+      tripods,
       cardSet,
     };
   } catch (e) {
-    console.error(e);
-    return null;
+    return res?.name || "인식불가";
   }
 }
 
