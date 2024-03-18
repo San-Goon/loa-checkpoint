@@ -42,6 +42,11 @@ npm run dev
 ## 릴리즈노트
 * 0.1.0 (24/03/13)
     * 출시
+* 0.1.0 (24/03/20)
+    * Table -> Data Table 로 전환
+        * 열 보이기 기능 추가
+        * 행 삭제 기능 추가
+    * 캐릭터 검색 로직 변경     
 
 ## API Documentation
 [Lostark OpenAPI Developer Portal](https://developer-lostark.game.onstove.com/getting-started)
