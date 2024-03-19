@@ -108,6 +108,29 @@ export default function VideoSection() {
     }, 2000);
   }, [captureVideo, setRecognized, rectangles]);
 
+  const onClickCaptureWaitingRoom = useCallback(async () => {
+    const scheduler = createScheduler();
+    for (let i = 0; i < 12; i++) {
+      // 베히모스 대비 12칸까지 인식
+      // @ts-ignore
+      const worker = await createWorker(["kor", "eng"]);
+      scheduler.addWorker(worker);
+    }
+    const results = await Promise.all(
+      rectangles.map((rectangle) =>
+        scheduler.addJob("recognize", canvasRef.current as HTMLCanvasElement, {
+          rectangle,
+        }),
+      ),
+    );
+    console.log(
+      "recognized texts: ",
+      results.map((r) => r.data.text.trim()),
+    );
+    setRecognized(results.map((r) => r.data.text.trim()));
+    await scheduler.terminate();
+  }, [rectangles, setRecognized]);
+
   const stopCapture = useCallback(() => {
     setIsCapturing(false);
     if (captureIntervalId.current) {
@@ -191,6 +214,9 @@ export default function VideoSection() {
           capturedImage={capturedImage}
           disabled={!isSharing || isCapturing}
         />
+        <Button onClick={onClickCaptureWaitingRoom} disabled={!isSharing}>
+          대기실 캡쳐
+        </Button>
       </div>
     </div>
   );
