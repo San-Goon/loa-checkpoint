@@ -68,7 +68,7 @@ export const columns: ColumnDef<Info>[] = [
       return (
         <div>
           <p>{row.original.title}</p>
-          <p>{row.original.name}</p>
+          <p className="mt-2">{row.original.name}</p>
         </div>
       );
     },
