@@ -51,11 +51,11 @@ export const columns: ColumnDef<Info>[] = [
         return (
           <TooltipProvider>
             <Tooltip>
-              <p>{row.original.title}</p>
+              {row.original.title ? (
+                <p className="mb-2">{row.original.title}</p>
+              ) : null}
               <TooltipTrigger asChild>
-                <p className="font-bold text-red-600 mt-2">
-                  {row.original.name}
-                </p>
+                <p className="font-bold text-red-600">{row.original.name}</p>
               </TooltipTrigger>
               <TooltipContent>
                 <p>차단된 캐릭터명:{row.original.isBanned.name}</p>
@@ -67,8 +67,10 @@ export const columns: ColumnDef<Info>[] = [
       }
       return (
         <div>
-          <p>{row.original.title}</p>
-          <p className="mt-2">{row.original.name}</p>
+          {row.original.title ? (
+            <p className="mb-2">{row.original.title}</p>
+          ) : null}
+          <p>{row.original.name}</p>
         </div>
       );
     },
