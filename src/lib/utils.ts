@@ -11,7 +11,10 @@ function htmlToStr(html: string) {
   let doc = parser.parseFromString(html, "text/html");
   return doc.body.textContent || "";
 }
-export function responseProcessor(res: any) {
+export function responseProcessor(
+  res: any,
+  blacklist: { name: string; memo: string }[],
+) {
   try {
     const name = res.ArmoryProfile.CharacterName;
     let mainEngraving = "";
@@ -38,6 +41,8 @@ export function responseProcessor(res: any) {
       quality: tooltip.qualityValue,
     };
     let cardSet = "";
+
+    let isBanned = blacklist.find((item) => res.siblings.includes(item.name));
 
     for (const { Type, Value } of res.ArmoryProfile.Stats) {
       if (
@@ -213,6 +218,7 @@ export function responseProcessor(res: any) {
         }
       }
     }
+
     return {
       name,
       mainEngraving,
@@ -225,6 +231,7 @@ export function responseProcessor(res: any) {
       gems,
       tripods,
       cardSet,
+      isBanned,
     };
   } catch (e) {
     return res?.name || "인식불가";

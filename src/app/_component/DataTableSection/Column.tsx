@@ -5,6 +5,13 @@ import { Fragment } from "react";
 import Link from "next/link";
 import RemoveButton from "@/app/_component/DataTableSection/RemoveButton";
 
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
 export type Info = {
   name: string;
   mainEngraving: string;
@@ -28,12 +35,34 @@ export type Info = {
   };
   gems: { [key: string]: number };
   tripods: { [key: string]: number };
+  isBanned: {
+    name: string;
+    memo: string;
+  };
 };
 
 export const columns: ColumnDef<Info>[] = [
   {
     accessorKey: "name",
     header: "이름",
+    cell: ({ row }) => {
+      if (row.original.isBanned) {
+        return (
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <p className="font-bold text-red-600">{row.original.name}</p>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>차단된 캐릭터명:{row.original.isBanned.name}</p>
+                <p>사유:{row.original.isBanned.memo}</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        );
+      }
+      return <div>{row.original.name}</div>;
+    },
   },
   {
     accessorKey: "mainEngraving",
