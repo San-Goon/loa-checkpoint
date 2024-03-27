@@ -214,9 +214,9 @@ export default function VideoSection() {
           capturedImage={capturedImage}
           disabled={!isSharing || isCapturing}
         />
-        <Button onClick={onClickCaptureWaitingRoom} disabled={!isSharing}>
-          대기실 캡쳐
-        </Button>
+        {/*<Button onClick={onClickCaptureWaitingRoom} disabled={!isSharing}>*/}
+        {/*  대기실 캡쳐*/}
+        {/*</Button>*/}
       </div>
     </div>
   );
