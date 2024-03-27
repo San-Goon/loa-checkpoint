@@ -7,8 +7,10 @@ import { useTokenStore } from "@/store/token";
 import { useQueries } from "@tanstack/react-query";
 import { getCharacterInfo } from "@/app/_lib/getCharacterInfo";
 import { responseProcessor } from "@/lib/utils";
+import { useBlacklistStore } from "@/store/blacklist";
 
 export default function DataTableSection() {
+  const blacklist = useBlacklistStore((state) => state.blacklist);
   const recognized = useCharactersStore((state) => state.recognized);
   const typed = useCharactersStore((state) => state.typed);
   const token = useTokenStore((state) => state.token);
@@ -33,7 +35,7 @@ export default function DataTableSection() {
 
   const data = [...recognizedQueries, ...typedQueries].map((query) => {
     if (query.isLoading) return "loading";
-    return responseProcessor(query.data);
+    return responseProcessor(query.data, blacklist);
   });
 
   return (
