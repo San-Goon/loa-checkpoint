@@ -12,9 +12,7 @@ export default function ColumnFilter({ table }: { table: Table<Info> }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="ml-auto">
-          보이기 설정
-        </Button>
+        <Button variant="outline">보이기 설정</Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         {table

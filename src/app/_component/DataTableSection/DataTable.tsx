@@ -21,6 +21,7 @@ import { Info } from "@/app/_component/DataTableSection/Column";
 import ColumnFilter from "@/app/_component/DataTableSection/ColumnFilter";
 import SearchInput from "@/app/_component/DataTableSection/SearchInput";
 import RemoveButton from "@/app/_component/DataTableSection/RemoveButton";
+import InitializeButton from "@/app/_component/DataTableSection/InitializeButton";
 
 interface Props {
   data: Info[];
@@ -44,7 +45,10 @@ export default function DataTable({ data, columns }: Props) {
     <div>
       <div className="flex items-center py-4">
         <SearchInput />
-        <ColumnFilter table={table} />
+        <div className="flex ml-auto gap-2">
+          <InitializeButton />
+          <ColumnFilter table={table} />
+        </div>
       </div>
       <div className="rounded-md border">
         <Table>
