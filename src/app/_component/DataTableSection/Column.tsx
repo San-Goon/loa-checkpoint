@@ -14,6 +14,7 @@ import {
 
 export type Info = {
   name: string;
+  characterLv: string;
   title: string;
   mainEngraving: string;
   equipment: {
@@ -51,6 +52,7 @@ export const columns: ColumnDef<Info>[] = [
         return (
           <TooltipProvider>
             <Tooltip>
+              <p>{row.original.characterLv}</p>
               {row.original.title ? (
                 <strong className="mb-2">{row.original.title}</strong>
               ) : null}
@@ -67,6 +69,7 @@ export const columns: ColumnDef<Info>[] = [
       }
       return (
         <div>
+          <p>{row.original.characterLv}</p>
           {row.original.title ? (
             <strong className="mb-2">{row.original.title}</strong>
           ) : null}

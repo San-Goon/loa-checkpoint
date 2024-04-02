@@ -28,6 +28,7 @@ export function responseProcessor(
     };
 
     const expLv = res.ArmoryProfile.ExpeditionLevel;
+    const characterLv = "Lv." + res.ArmoryProfile.CharacterLevel;
     const title = res.ArmoryProfile.Title;
     const engraving = {
       buff: "",
@@ -231,6 +232,7 @@ export function responseProcessor(
       mainEngraving,
       equipment,
       expLv,
+      characterLv,
       title,
       engraving,
       stats,
