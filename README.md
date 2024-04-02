@@ -49,6 +49,11 @@ npm run dev
     * 캐릭터 검색 로직 변경  
 * 0.3.0 (24/03/27)
   * 블랙리스트 추가 기능 개발
+* 0.4.0 (24/04/02)
+  * 버그 수정
+  * 초기화 버튼 추가
+  * 전투 레벨 추가
+  * 보석 UI 변경
 
 ## API Documentation
 [Lostark OpenAPI Developer Portal](https://developer-lostark.game.onstove.com/getting-started)
