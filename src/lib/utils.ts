@@ -28,6 +28,7 @@ export function responseProcessor(
     };
 
     const expLv = res.ArmoryProfile.ExpeditionLevel;
+    const characterLv = "Lv." + res.ArmoryProfile.CharacterLevel;
     const title = res.ArmoryProfile.Title;
     const engraving = {
       buff: "",
@@ -54,27 +55,34 @@ export function responseProcessor(
 
     stats.sort((a, b) => b[1] - a[1]);
 
-    const gems: { [key: string]: number } = {
-      "10멸": 0,
-      "9멸": 0,
-      "8멸": 0,
-      "7멸": 0,
-      "6멸": 0,
-      "5멸": 0,
-      "4멸": 0,
-      "3멸": 0,
-      "2멸": 0,
-      "1멸": 0,
-      "10홍": 0,
-      "9홍": 0,
-      "8홍": 0,
-      "7홍": 0,
-      "6홍": 0,
-      "5홍": 0,
-      "4홍": 0,
-      "3홍": 0,
-      "2홍": 0,
-      "1홍": 0,
+    const gems: {
+      annihilation: { [key: string]: number };
+      crimsonFlame: { [key: string]: number };
+    } = {
+      annihilation: {
+        "Lv.10": 0,
+        "Lv.9": 0,
+        "Lv.8": 0,
+        "Lv.7": 0,
+        "Lv.6": 0,
+        "Lv.5": 0,
+        "Lv.4": 0,
+        "Lv.3": 0,
+        "Lv.2": 0,
+        "Lv.1": 0,
+      },
+      crimsonFlame: {
+        "Lv.10": 0,
+        "Lv.9": 0,
+        "Lv.8": 0,
+        "Lv.7": 0,
+        "Lv.6": 0,
+        "Lv.5": 0,
+        "Lv.4": 0,
+        "Lv.3": 0,
+        "Lv.2": 0,
+        "Lv.1": 0,
+      },
     };
 
     const tripods: { [key: string]: number } = {};
@@ -194,14 +202,14 @@ export function responseProcessor(
         const doc = htmlToStr(Name);
         if (doc[1] === "레") {
           const gemName = doc[4];
-          const gemLv = doc[0];
-          const str = gemLv + gemName;
-          gems[str]++;
+          const gemLv = "Lv." + doc[0];
+          if (gemName === "멸") gems.annihilation[gemLv]++;
+          else gems.crimsonFlame[gemLv]++;
         } else {
           const gemName = doc[5];
-          const gemLv = "10";
-          const str = gemLv + gemName;
-          gems[str]++;
+          const gemLv = "Lv.10";
+          if (gemName === "멸") gems.annihilation[gemLv]++;
+          else gems.crimsonFlame[gemLv]++;
         }
       }
     }
@@ -224,6 +232,7 @@ export function responseProcessor(
       mainEngraving,
       equipment,
       expLv,
+      characterLv,
       title,
       engraving,
       stats,

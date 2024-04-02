@@ -6,6 +6,7 @@ interface CharactersState {
   setRecognized(state: string[]): void;
   setTyped(state: string): void;
   deleteName(state: string): void;
+  initialize(): void;
 }
 
 export const useCharactersStore = create<CharactersState>((set, get) => ({
@@ -30,6 +31,14 @@ export const useCharactersStore = create<CharactersState>((set, get) => ({
       const copiedObj = { ...prev };
       copiedObj.recognized = prev.recognized.filter((v) => v !== name);
       copiedObj.typed = prev.typed.filter((v) => v !== name);
+      return copiedObj;
+    });
+  },
+  initialize() {
+    set((prev) => {
+      const copiedObj = { ...prev };
+      copiedObj.recognized = [];
+      copiedObj.typed = [];
       return copiedObj;
     });
   },

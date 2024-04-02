@@ -14,6 +14,19 @@ export const getCharacterInfo = async (name: string, token: string) => {
       cache: "no-store",
     },
   );
+  // 에러처리
+  if (response.status === 401) {
+    return {
+      name,
+      error: "Unauthorized",
+    };
+  }
+  if (response.status === 429) {
+    return {
+      name,
+      error: "Rate Limit Exceeded",
+    };
+  }
   const data = await response.json();
   const siblingsResponse = await fetch(
     `https://developer-lostark.game.onstove.com/characters/${name}/siblings`,
@@ -30,6 +43,12 @@ export const getCharacterInfo = async (name: string, token: string) => {
       cache: "no-store",
     },
   );
+  if (siblingsResponse.status === 429) {
+    return {
+      name,
+      error: "Rate Limit Exceeded",
+    };
+  }
   const siblingsData = await siblingsResponse.json();
   return {
     ...data,

@@ -14,6 +14,7 @@ import {
 
 export type Info = {
   name: string;
+  characterLv: string;
   title: string;
   mainEngraving: string;
   equipment: {
@@ -51,8 +52,9 @@ export const columns: ColumnDef<Info>[] = [
         return (
           <TooltipProvider>
             <Tooltip>
+              <p>{row.original.characterLv}</p>
               {row.original.title ? (
-                <p className="mb-2">{row.original.title}</p>
+                <strong className="mb-2">{row.original.title}</strong>
               ) : null}
               <TooltipTrigger asChild>
                 <p className="font-bold text-red-600">{row.original.name}</p>
@@ -67,8 +69,9 @@ export const columns: ColumnDef<Info>[] = [
       }
       return (
         <div>
+          <p>{row.original.characterLv}</p>
           {row.original.title ? (
-            <p className="mb-2">{row.original.title}</p>
+            <strong className="mb-2">{row.original.title}</strong>
           ) : null}
           <p>{row.original.name}</p>
         </div>
@@ -159,19 +162,42 @@ export const columns: ColumnDef<Info>[] = [
     accessorKey: "gems",
     header: "보석",
     cell: ({ row }) => {
-      const gems: { [key: string]: number } = row.getValue("gems");
+      const {
+        annihilation,
+        crimsonFlame,
+      }: {
+        annihilation: { [key: string]: number };
+        crimsonFlame: { [key: string]: number };
+      } = row.getValue("gems");
       return (
-        <>
-          {GEM_MAP_ORDER.map((item) => {
-            if (gems[item])
-              return (
-                <Fragment key={item}>
-                  {item}
-                  {gems[item]}개{" "}
-                </Fragment>
-              );
-          })}
-        </>
+        <div className="flex gap-2">
+          <div>
+            <div>
+              <p>멸화</p>
+              {Object.entries(annihilation).map(([key, value]) => {
+                if (value)
+                  return (
+                    <div key={key}>
+                      {key}: {value}개
+                    </div>
+                  );
+              })}
+            </div>
+          </div>
+          <div>
+            <div>
+              <p>홍염</p>
+              {Object.entries(crimsonFlame).map(([key, value]) => {
+                if (value)
+                  return (
+                    <div key={key}>
+                      {key}: {value}개
+                    </div>
+                  );
+              })}
+            </div>
+          </div>
+        </div>
       );
     },
   },
@@ -222,27 +248,4 @@ export const columns: ColumnDef<Info>[] = [
       return <RemoveButton name={row.getValue("name")} />;
     },
   },
-];
-
-const GEM_MAP_ORDER = [
-  "10멸",
-  "9멸",
-  "8멸",
-  "7멸",
-  "6멸",
-  "5멸",
-  "4멸",
-  "3멸",
-  "2멸",
-  "1멸",
-  "10홍",
-  "9홍",
-  "8홍",
-  "7홍",
-  "6홍",
-  "5홍",
-  "4홍",
-  "3홍",
-  "2홍",
-  "1홍",
 ];
