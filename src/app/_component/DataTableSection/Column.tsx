@@ -52,7 +52,7 @@ export const columns: ColumnDef<Info>[] = [
           <TooltipProvider>
             <Tooltip>
               {row.original.title ? (
-                <p className="mb-2">{row.original.title}</p>
+                <strong className="mb-2">{row.original.title}</strong>
               ) : null}
               <TooltipTrigger asChild>
                 <p className="font-bold text-red-600">{row.original.name}</p>
@@ -68,7 +68,7 @@ export const columns: ColumnDef<Info>[] = [
       return (
         <div>
           {row.original.title ? (
-            <p className="mb-2">{row.original.title}</p>
+            <strong className="mb-2">{row.original.title}</strong>
           ) : null}
           <p>{row.original.name}</p>
         </div>
