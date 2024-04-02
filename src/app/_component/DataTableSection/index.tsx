@@ -23,7 +23,7 @@ export default function DataTableSection() {
     queries: recognized.map((name) => ({
       queryKey: ["info", name],
       queryFn: () => getCharacterInfo(name, token),
-      staleTime: 1 * 30 * 1000, // 30초
+      staleTime: 1 * 15 * 1000, // 15초
       gcTime: 3 * 60 * 1000, // 60초
     })),
   });
@@ -32,7 +32,7 @@ export default function DataTableSection() {
     queries: typed.map((name) => ({
       queryKey: ["info", name],
       queryFn: () => getCharacterInfo(name, token),
-      staleTime: 1 * 30 * 1000, // 30초
+      staleTime: 1 * 15 * 1000, // 15초
       gcTime: 3 * 60 * 1000, // 60초
     })),
   });
