@@ -9,6 +9,7 @@ export default function SearchInput() {
     (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       setTyped(name);
+      setName("");
     },
     [setTyped, name],
   );
