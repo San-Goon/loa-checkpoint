@@ -20,6 +20,7 @@ import { useState } from "react";
 import { Info } from "@/app/_component/DataTableSection/Column";
 import ColumnFilter from "@/app/_component/DataTableSection/ColumnFilter";
 import SearchInput from "@/app/_component/DataTableSection/SearchInput";
+import RemoveButton from "@/app/_component/DataTableSection/RemoveButton";
 
 interface Props {
   data: Info[];
@@ -96,8 +97,11 @@ export default function DataTable({ data, columns }: Props) {
                         colSpan={columns.length}
                         className="h-24 text-center"
                       >
-                        캐릭터명을 확인해주세요. 인식된 캐릭터명:{" "}
-                        <strong>{row.original}</strong>
+                        <div className="flex justify-center">
+                          캐릭터명을 확인해주세요. 인식된 캐릭터명:{" "}
+                          <strong className="ml-1 mr-2">{row.original}</strong>
+                          <RemoveButton name={row.original} />
+                        </div>
                       </TableCell>
                     );
                   }
