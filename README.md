@@ -54,6 +54,9 @@ npm run dev
   * 초기화 버튼 추가
   * 전투 레벨 추가
   * 보석 UI 변경
+* 0.4.1 (24/04/09)
+    * 버그 수정
+    * UI 수정
 
 ## API Documentation
 [Lostark OpenAPI Developer Portal](https://developer-lostark.game.onstove.com/getting-started)
