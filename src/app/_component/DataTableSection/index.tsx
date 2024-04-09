@@ -39,7 +39,7 @@ export default function DataTableSection() {
 
   const data = [...recognizedQueries, ...typedQueries].map((query) => {
     if (query.isLoading) return "loading";
-    if (query.data.error) {
+    if (query.data?.error) {
       deleteName(query.data.name);
       if (query.data.error === "Unauthorized") {
         toast({
