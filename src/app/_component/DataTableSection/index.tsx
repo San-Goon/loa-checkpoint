@@ -39,7 +39,7 @@ export default function DataTableSection() {
 
   const data = [...recognizedQueries, ...typedQueries].map((query) => {
     if (query.isLoading) return "loading";
-    if (query.data.error) {
+    if (query.data?.error) {
       deleteName(query.data.name);
       if (query.data.error === "Unauthorized") {
         toast({
@@ -53,6 +53,21 @@ export default function DataTableSection() {
           variant: "destructive",
           title: "API 요청 횟수가 초과되었습니다.",
           description: "잠시후에 다시 시도해주세요.",
+        });
+      }
+      if (query.data.error === "Service Unavailable") {
+        toast({
+          variant: "destructive",
+          title: "로스트아크 서버가 점검 중입니다.",
+          description: "점검 후에 이용해주세요.",
+        });
+      }
+      if (query.data.error === "Unknown") {
+        toast({
+          variant: "destructive",
+          title: "API 요청 중 알 수 없는 에러가 발생했습니다.",
+          description:
+            "잠시후에 다시 시도해주세요. 지속적으로 발생한다면 관리자에게 문의해주세요.",
         });
       }
     }

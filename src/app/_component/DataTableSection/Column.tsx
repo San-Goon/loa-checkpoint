@@ -169,34 +169,43 @@ export const columns: ColumnDef<Info>[] = [
         annihilation: { [key: string]: number };
         crimsonFlame: { [key: string]: number };
       } = row.getValue("gems");
+
+      const allZero = (obj: { [key: string]: number }) => {
+        return Object.values(obj).every((x) => x === 0);
+      };
+
       return (
         <div className="flex gap-2">
-          <div>
+          {!allZero(annihilation) && (
             <div>
-              <p>멸화</p>
-              {Object.entries(annihilation).map(([key, value]) => {
-                if (value)
-                  return (
-                    <div key={key}>
-                      {key}: {value}개
-                    </div>
-                  );
-              })}
+              <div>
+                <p>멸화</p>
+                {Object.entries(annihilation).map(([key, value]) => {
+                  if (value)
+                    return (
+                      <div key={key}>
+                        {key}: {value}개
+                      </div>
+                    );
+                })}
+              </div>
             </div>
-          </div>
-          <div>
+          )}
+          {!allZero(crimsonFlame) && (
             <div>
-              <p>홍염</p>
-              {Object.entries(crimsonFlame).map(([key, value]) => {
-                if (value)
-                  return (
-                    <div key={key}>
-                      {key}: {value}개
-                    </div>
-                  );
-              })}
+              <div>
+                <p>홍염</p>
+                {Object.entries(crimsonFlame).map(([key, value]) => {
+                  if (value)
+                    return (
+                      <div key={key}>
+                        {key}: {value}개
+                      </div>
+                    );
+                })}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       );
     },
